@@ -14,13 +14,20 @@
       </button>
     </header>
     <main>
-      <canvas id="game" width="960" height="320" aria-label="Runny Hound game area">
+      <canvas
+        id="game"
+        width="960"
+        height="320"
+        tabindex="0"
+        aria-label="Runny Hound game. Press Space to jump. Press H for help."
+      >
         The game needs a browser with canvas support.
       </canvas>
-      <p class="status">The game is coming soon. This page is a placeholder.</p>
+      <p class="hint">Space to jump · Hold for higher · M sound · P pause · H help</p>
+      <p id="status" class="visually-hidden" aria-live="polite"></p>
     </main>
     <dialog id="help-dialog" aria-labelledby="help-title">
-      <h2 id="help-title">Help</h2>
+      <h2 id="help-title" tabindex="-1" autofocus>Help</h2>
       <div id="help-content"></div>
       <form method="dialog"><button>Close</button></form>
     </dialog>

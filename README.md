@@ -5,8 +5,16 @@ Greyhound runs through Bethlehem, PA, jumping over obstacles from campus and the
 Christmas City when you press **Space**. Every graphic and sound is generated in code;
 there are no image or audio files.
 
-> Status: project setup is done. The game itself is not built yet; `index.html` is a
-> placeholder with in-app help.
+Jump over a lovefeast candle, a stack of books, a Moravian Star, Bethlehem Steel beams
+and a Christmas tree, under South Mountain's star. Hit one and you get a fun fact
+about it. How it is built: [docs/architecture.md](docs/architecture.md).
+
+| Control                   | Action                                                 |
+| ------------------------- | ------------------------------------------------------ |
+| `Space` / `↑` / `W` / tap | Jump (hold for higher, tap for a hop); start / restart |
+| `M`                       | Sound on/off (remembered)                              |
+| `P`                       | Pause                                                  |
+| `H`                       | Help (pauses the game)                                 |
 
 ## Play it on your computer
 

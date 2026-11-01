@@ -1,5 +1,6 @@
-/* Moravian-inspired palette. Values are approximations chosen for this demo; check
-   them against the official Moravian University brand guide before any public use. */
+/* Moravian-inspired palette. The first four values must match src/palette.js (a test
+   checks this). They are approximations; check them against the official Moravian
+   University brand guide before any public release. */
 :root {
   --moravian-blue: #0a2240;
   --greyhound-grey: #a2aaad;
@@ -18,12 +19,15 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 1.5rem;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
 }
 
 h1 {
   margin: 0;
   color: var(--star-gold);
+  letter-spacing: 0.03em;
 }
 
 button {
@@ -36,23 +40,63 @@ button {
   cursor: pointer;
 }
 
+button:hover,
+button:focus-visible {
+  background: var(--star-gold);
+  color: var(--moravian-blue);
+}
+
 main {
   display: grid;
-  place-items: center;
+  justify-items: center;
   gap: 0.5rem;
-  padding: 1rem;
+  padding: 0 1rem 1rem;
 }
 
 canvas {
-  max-width: 100%;
-  background: var(--greyhound-grey);
+  width: 100%;
+  max-width: 960px;
+  aspect-ratio: 3 / 1;
+  border: 2px solid var(--star-gold);
   border-radius: 0.5rem;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+canvas:focus-visible {
+  outline: 3px solid var(--snow);
+  outline-offset: 3px;
+}
+
+.hint {
+  margin: 0;
+  color: var(--greyhound-grey);
+  font-size: 0.9rem;
 }
 
 dialog {
-  max-width: 32rem;
+  max-width: 36rem;
   border: 2px solid var(--star-gold);
   border-radius: 0.5rem;
   background: var(--moravian-blue);
   color: var(--snow);
+}
+
+dialog::backdrop {
+  background: rgb(0 0 0 / 0.6);
+}
+
+dialog h2,
+dialog h3 {
+  color: var(--star-gold);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

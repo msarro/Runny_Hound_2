@@ -1,0 +1,35 @@
+// Moravian-inspired colors. The first four match the CSS variables in style.css
+// (a test checks this). They are approximations; check them against the official
+// Moravian University brand guide before any public release.
+export const PALETTE = {
+  moravianBlue: "#0a2240",
+  greyhoundGrey: "#a2aaad",
+  starGold: "#f2c75c",
+  snow: "#f7f7f2",
+
+  nightTop: "#050f1f",
+  skyHorizon: "#2a4d7a",
+  mountain: "#15355c",
+  skyline: "#0d2442",
+  windowGlow: "#f6d77f",
+  starGoldDeep: "#d39b22",
+  coatBlue: "#1d4f91",
+  houndShade: "#7f878a",
+  houndLight: "#c7cdcf",
+  nose: "#2b2b2b",
+  brick: "#8b4a3a",
+  brickDark: "#6e3a2e",
+  mortar: "#4d3a35",
+  curb: "#b9c0c3",
+  wax: "#ead08a",
+  waxShade: "#c9a95c",
+  lovefeastRed: "#c8102e",
+  flame: "#ffb347",
+  bookGrey: "#6c7a89",
+  pages: "#efe6cf",
+  steel: "#4a5563",
+  rust: "#9c4a24",
+  pine: "#1f5c3a",
+  pineLight: "#2e7d4f",
+  trunk: "#5b3a22",
+};

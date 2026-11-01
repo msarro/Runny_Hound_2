@@ -45,7 +45,10 @@ university-themed obstacles, in Moravian-inspired colors. See
   roles and permissions in the app, and map people to roles via SSO groups or manual
   assignment ([decision 0002](docs/decisions/0002-no-sign-in.md)).
 - **Assets:** all graphics and sounds are generated in code. No downloaded images,
-  fonts or audio, and no official Moravian logos.
+  fonts or audio, no official Moravian logos, and nothing loaded from the internet
+  (`test/assets.test.mjs` enforces this).
+- **Fairness:** game-tuning changes must keep the "attentive player can survive" and
+  "every obstacle can be cleared" tests passing. Never loosen them to fit a change.
 
 ## Documentation (both kinds are required)
 
