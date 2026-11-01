@@ -20,11 +20,13 @@ const PROPS = new Set(
 // NaN/Infinity coordinates, which a real canvas would silently ignore.
 function strictContext() {
   const calls = [];
+  const texts = [];
   const state = { font: "10px sans-serif" };
   const gradient = { addColorStop: (o) => assert.ok(o >= 0 && o <= 1, `color stop ${o}`) };
   return new Proxy(state, {
     get(target, key) {
       if (key === "calls") return calls;
+      if (key === "texts") return texts;
       if (key === "canvas") return { width: 960, height: 320 };
       if (PROPS.has(key)) return target[key];
       if (!METHODS.has(key)) throw new Error(`canvas has no method "${String(key)}"`);
@@ -33,6 +35,7 @@ function strictContext() {
           if (typeof a === "number") assert.ok(Number.isFinite(a), `${key} got ${a}`);
         }
         calls.push(key);
+        if (key === "fillText") texts.push(args[0]);
         if (key === "measureText") return { width: String(args[0]).length * 8 };
         if (key.startsWith("create")) return gradient;
         return undefined;
@@ -88,4 +91,18 @@ test("long text wraps to fit and keeps every word", () => {
   assert.ok(lines.length > 1);
   for (const line of lines) assert.ok(measure(line) <= 200, line);
   assert.equal(lines.join(" "), text);
+});
+
+test("the screen says when music or all sound is off", () => {
+  const game = createGame({ rng: createRng(1) });
+  const musicOff = strictContext();
+  drawScene(musicOff, game, 0, { musicOn: false });
+  assert.ok(musicOff.texts.includes("Music off (N)"));
+  const muted = strictContext();
+  drawScene(muted, game, 0, { muted: true, musicOn: false });
+  assert.ok(muted.texts.includes("Sound off (M)"));
+  assert.ok(!muted.texts.includes("Music off (N)"));
+  const allOn = strictContext();
+  drawScene(allOn, game, 0, { musicOn: true });
+  assert.ok(!allOn.texts.some((s) => /off \(/.test(s)));
 });

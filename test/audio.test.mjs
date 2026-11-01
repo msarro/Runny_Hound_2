@@ -1,62 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createAudio, SOUND_NAMES } from "../src/audio.js";
-
-// A pretend Web Audio context that records what the game asks it to do and, like the
-// real one, refuses exponential ramps to zero or below.
-function fakeContext() {
-  const started = [];
-  const stopped = [];
-  const param = (value = 0) => ({
-    value,
-    setValueAtTime() {},
-    linearRampToValueAtTime() {},
-    exponentialRampToValueAtTime(v) {
-      if (!(v > 0)) throw new RangeError("exponential ramp target must be > 0");
-    },
-    setTargetAtTime() {},
-    cancelScheduledValues() {},
-  });
-  const node = (extra = {}) => ({
-    connect(target) {
-      return target;
-    },
-    disconnect() {},
-    ...extra,
-  });
-  const source = (extra) =>
-    node({
-      start(t) {
-        started.push(this);
-        this.startTime = t;
-      },
-      stop(t) {
-        stopped.push(this);
-        this.stopTime = t;
-      },
-      ...extra,
-    });
-  return {
-    started,
-    stopped,
-    state: "running",
-    currentTime: 1,
-    sampleRate: 44100,
-    destination: node(),
-    resume() {
-      this.state = "running";
-      return Promise.resolve();
-    },
-    createOscillator: () => source({ type: "sine", frequency: param(440), detune: param() }),
-    createGain: () => node({ gain: param(1) }),
-    createBiquadFilter: () => node({ type: "lowpass", frequency: param(350), Q: param(1) }),
-    createBuffer: (channels, length) => ({
-      length,
-      getChannelData: () => new Float32Array(length),
-    }),
-    createBufferSource: () => source({ buffer: null }),
-  };
-}
+import { fakeContext } from "./helpers/fake-audio.mjs";
 
 test("every game sound plays and every note it starts is also stopped", () => {
   for (const name of SOUND_NAMES) {
@@ -108,4 +53,38 @@ test("the audio system is created once, on first use", () => {
   audio.play("jump");
   audio.play("crash");
   assert.equal(created, 1);
+});
+
+test("music plays when asked, keeps going as time passes, and stops when asked", () => {
+  const ctx = fakeContext();
+  const audio = createAudio(() => ctx);
+  audio.syncMusic(true);
+  const first = ctx.started.length;
+  assert.ok(first > 0, "no music started");
+  for (let i = 0; i < 40; i++) {
+    ctx.currentTime += 0.05;
+    audio.syncMusic(true);
+  }
+  assert.ok(ctx.started.length > first, "music did not continue");
+  audio.syncMusic(false);
+  const atStop = ctx.started.length;
+  for (let i = 0; i < 40; i++) {
+    ctx.currentTime += 0.05;
+    audio.syncMusic(false);
+  }
+  assert.equal(ctx.started.length, atStop, "music kept playing after stop");
+});
+
+test("the music setting starts on and can be turned off", () => {
+  const audio = createAudio(() => fakeContext());
+  assert.equal(audio.musicOn, true);
+  audio.setMusicOn(false);
+  assert.equal(audio.musicOn, false);
+});
+
+test("music is safe without Web Audio", () => {
+  const audio = createAudio(() => null);
+  audio.syncMusic(true);
+  audio.rewindMusic();
+  audio.syncMusic(false);
 });

@@ -47,6 +47,9 @@ university-themed obstacles, in Moravian-inspired colors. See
 - **Assets:** all graphics and sounds are generated in code. No downloaded images,
   fonts or audio, no official Moravian logos, and nothing loaded from the internet
   (`test/assets.test.mjs` enforces this).
+- **Music:** only public-domain pieces, with the source recorded in a decision record.
+  Take notes from a written score, never from memory
+  ([decision 0004](docs/decisions/0004-background-music.md)).
 - **Fairness:** game-tuning changes must keep the "attentive player can survive" and
   "every obstacle can be cleared" tests passing. Never loosen them to fit a change.
 

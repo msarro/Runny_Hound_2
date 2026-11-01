@@ -33,6 +33,15 @@ test("the mute setting is remembered and starts off", () => {
   assert.equal(createStore(storage).getMuted(), true);
 });
 
+test("the music setting is remembered and starts on", () => {
+  const storage = memoryStorage();
+  assert.equal(createStore(storage).getMusicOn(), true);
+  createStore(storage).setMusicOn(false);
+  assert.equal(createStore(storage).getMusicOn(), false);
+  createStore(storage).setMusicOn(true);
+  assert.equal(createStore(storage).getMusicOn(), true);
+});
+
 test("the game still works when the browser blocks storage", () => {
   const throwing = {
     getItem() {
@@ -46,7 +55,9 @@ test("the game still works when the browser blocks storage", () => {
     const store = createStore(storage);
     assert.equal(store.getHighScore(), 0);
     assert.equal(store.getMuted(), false);
+    assert.equal(store.getMusicOn(), true);
     store.setHighScore(5);
     store.setMuted(true);
+    store.setMusicOn(false);
   }
 });

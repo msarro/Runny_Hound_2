@@ -4,6 +4,7 @@ const KEYS = {
   ArrowUp: "jump",
   KeyW: "jump",
   KeyM: "mute",
+  KeyN: "music",
   KeyP: "pause",
   KeyH: "help",
 };

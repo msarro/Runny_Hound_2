@@ -18,7 +18,7 @@ test("help tells players that Space makes the greyhound jump", () => {
 });
 
 test("help lists every control", () => {
-  for (const control of ["Space", "Hold", "M:", "P:", "H:", "Tap"])
+  for (const control of ["Space", "Hold", "M:", "N:", "P:", "H:", "Tap"])
     assert.ok(text.includes(control), control);
 });
 
@@ -38,4 +38,12 @@ test("the page has a Help button wired to a help dialog", () => {
 test("the page announces the score for screen readers", () => {
   const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
   assert.match(html, /aria-live="polite"/);
+});
+
+test("help credits the music: In dulci jubilo in Bach's harmonization", () => {
+  assert.match(text, /In dulci jubilo/);
+  assert.match(text, /Good Christian Men, Rejoice/);
+  assert.match(text, /Bach/);
+  assert.match(text, /BWV 368/);
+  assert.match(text, /trombone choir/i);
 });
