@@ -30,11 +30,12 @@
           width="960"
           height="320"
           tabindex="0"
-          aria-label="Runny Hound game. Press Space to jump. Press H for help."
+          aria-label="Runny Hound game. Press Space to jump, down arrow to duck. Press H for help."
         >
           The game needs a browser with canvas support.
         </canvas>
         <div class="touch-controls">
+          <button id="duck-btn" type="button" aria-label="Duck">▼ Duck</button>
           <button id="jump-btn" type="button" aria-label="Jump">▲ Jump</button>
         </div>
       </div>
@@ -46,6 +47,7 @@
           <li>
             <kbd>Space</kbd> / <kbd>↑</kbd> / <kbd>W</kbd> / tap: jump. Hold for a higher leap.
           </li>
+          <li><kbd>↓</kbd> / <kbd>S</kbd>: duck under flying stars, or drop faster mid-air.</li>
           <li>
             <kbd>M</kbd> mute all sound · <kbd>N</kbd> toggle music · <kbd>P</kbd> or
             <kbd>Esc</kbd> pause (<kbd>Space</kbd> or tap resumes)

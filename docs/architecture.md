@@ -40,7 +40,8 @@ flowchart LR
 2. It advances the game in fixed steps of 1/120 s (`game.step`), so the game plays the
    same on a 60 Hz laptop and a 120 Hz phone. A long pause (switching tabs) is capped
    at 0.1 s so the hound doesn't teleport.
-3. Each step returns events (`start`, `jump`, `milestone`, `crash`, `highscore`).
+3. Each step returns events (`start`, `jump`, `land`, `duck`, `resume`, `milestone`, `crash`,
+   `highscore`).
    `main.js` turns them into sounds, saves the high score, and updates a hidden
    screen-reader message.
 4. `main.js` asks `shouldPlayMusic` whether music should be heard right now (running,
@@ -61,9 +62,9 @@ several courses: that proves the game never generates an impossible sequence.
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | `index.html`          | The page: header, canvas, touch Jump button, How to play, obstacle cards, footer, Help dialog, screen-reader status line. |
 | `src/main.js`         | Wires the browser to the game: loop, keyboard, touch, sound, saving; draws the header star, tab icon and obstacle cards.  |
-| `src/game.js`         | Game rules: phases (ready, running, over), score, speed, spawning, crashes.                                               |
-| `src/hound.js`        | Jump physics and the hound's hitbox.                                                                                      |
-| `src/obstacles.js`    | The obstacle catalog (with fun facts), hitboxes, spacing rules.                                                           |
+| `src/game.js`         | Game rules: phases (ready, running, over), score, speed, spawning, ducking, jump buffer, crashes, dust and spark effects. |
+| `src/hound.js`        | Jump and duck physics and the hound's hitbox (lower when crouching).                                                      |
+| `src/obstacles.js`    | The obstacle catalog (with fun facts and starting scores), groups, flying heights, hitboxes, spacing rules.               |
 | `src/collision.js`    | Box overlap test.                                                                                                         |
 | `src/config.js`       | Tuning numbers: world size, gravity, speeds, scoring.                                                                     |
 | `src/art.js`          | All drawing: sky, South Mountain star, skyline, snow, bricks, obstacles, hound, text.                                     |

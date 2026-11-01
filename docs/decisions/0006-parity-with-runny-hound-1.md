@@ -1,6 +1,6 @@
 # 0006: Parity with Runny Hound 1
 
-- Status: accepted (part 1: page and screens; part 2: gameplay, in progress)
+- Status: accepted (part 1: page and screens; part 2: gameplay)
 - Date: 2026-11-01
 
 ## Context
@@ -36,5 +36,31 @@ flying stars and marshmallow chicks.
   "Music off (N)" notice. Its test was changed to match.
 - Obstacles gained a `phrase` ("a Moravian Star"). The old game-over text lowercased
   proper names ("a moravian star", "a bethlehem steel beams").
-- Not matched: Runny Hound 1's scenery and day/night sky cycle. These are artwork
+
+## Part 2: gameplay
+
+- **Duck** (↓ or S, ▼ Duck button on touch screens): crouches on the ground (lower
+  hitbox), drops faster in the air (gravity × 3.2, as in Runny Hound 1).
+- **Flying Moravian Stars** from 300 points at three heights: low (jump), middle (duck
+  under), high (run under). They bob by 4 pixels and get 80 pixels of extra room.
+- **Marshmallow chicks**, and **groups** of up to three chicks or candles: up to two
+  before 150 points, up to three after (Runny Hound 1's rule).
+- Obstacles unlock with the score: candles, chicks, books and stars from the start;
+  beams and trees from 150; flying stars from 300. The Christmas tree, which Runny Hound
+  1 does not have, stays.
+- **Jump buffer**: a jump pressed up to 0.13 s before landing happens on landing.
+- **Effects**: dust while running, puffs on jump and landing, sparks and stars plus a
+  screen shake on a crash; landing and ducking sounds. Effects use their own random
+  numbers, so they never change the course.
+- **One deliberate difference:** Runny Hound 1's flying stars move 45 px/s faster than
+  the ground. That can leave less room after the previous obstacle than a jump plus
+  reaction time, which the fairness tests forbid. Here they move with the ground.
+- Fairness tests were extended rather than loosened: every group size and star height
+  must be passable at every speed by running, ducking or jumping, and the simulated
+  player (now also ducking) must survive two minutes on five courses and meet every
+  obstacle, a group of three, and all three star heights.
+
+## Not matched
+
+- Runny Hound 1's scenery and day/night sky cycle. These are artwork
   rather than UI or gameplay; this version keeps its own Bethlehem night scene.

@@ -13,6 +13,11 @@ test("M mutes, P pauses, H opens help", () => {
   assert.equal(actionForKey("KeyH"), "help");
 });
 
+test("Down arrow and S duck", () => {
+  assert.equal(actionForKey("ArrowDown"), "duck");
+  assert.equal(actionForKey("KeyS"), "duck");
+});
+
 test("N turns the music on or off", () => {
   assert.equal(actionForKey("KeyN"), "music");
 });

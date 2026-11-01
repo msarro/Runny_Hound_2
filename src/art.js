@@ -2,6 +2,7 @@
 import { WORLD } from "./config.js";
 import { HOUND } from "./hound.js";
 import { RESTART_DELAY } from "./game.js";
+import { obstacleBob } from "./obstacles.js";
 import { PALETTE as C } from "./palette.js";
 
 const { width: W, height: H, groundY: GROUND } = WORLD;
@@ -253,7 +254,7 @@ function drawGround(ctx, distance) {
 
 // ---------- Obstacles ----------
 
-function candle(ctx, x, base, w, h, time) {
+function oneCandle(ctx, x, base, w, h, time) {
   const cx = x + w / 2;
   const top = base - h;
   const flicker = 1 + 0.15 * Math.sin(time * 23) + 0.1 * Math.sin(time * 37);
@@ -384,11 +385,66 @@ function tree(ctx, x, base, w, h, time) {
   drawMoravianStar(ctx, cx, base - h + 8, 8, { points: 8, glow: 0.4 });
 }
 
-export const OBSTACLE_ART = { candle, books, star: starOnStand, beams, tree };
+// A marshmallow chick: sugar-coated, facing right, with a little orange beak.
+function oneChick(ctx, x, base, w, h, time, i) {
+  const hop = Math.max(0, Math.sin(time * 5 + i * 1.3)) * 1.5;
+  const b = base - hop;
+  ctx.fillStyle = C.chickYellow;
+  ctx.beginPath();
+  ctx.moveTo(x + 2, b);
+  ctx.bezierCurveTo(x - 1, b - 10, x + 2, b - 15, x + 8, b - 15);
+  ctx.bezierCurveTo(x + 9, b - h + 1, x + w - 5, b - h - 1, x + w - 4, b - 17);
+  ctx.bezierCurveTo(x + w - 3, b - 13, x + w - 5, b - 11, x + w - 7, b - 10);
+  ctx.bezierCurveTo(x + w, b - 6, x + w - 1, b, x + w - 6, b);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = C.chickShade;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(x + 9, b - 7, 4, Math.PI * 0.9, Math.PI * 1.8);
+  ctx.stroke();
+  ctx.fillStyle = C.chickSugar;
+  for (let s = 0; s < 6; s++) {
+    ctx.fillRect(x + 3 + hash(i * 9 + s) * (w - 8), b - 3 - hash(i * 9 + s + 50) * 14, 1.2, 1.2);
+  }
+  ctx.fillStyle = C.chickEye;
+  ctx.beginPath();
+  ctx.arc(x + w - 9, b - 19, 1.6, 0, TAU);
+  ctx.fill();
+  ctx.fillStyle = C.beak;
+  ctx.beginPath();
+  ctx.moveTo(x + w - 5, b - 18);
+  ctx.lineTo(x + w + 1, b - 16);
+  ctx.lineTo(x + w - 5, b - 14);
+  ctx.closePath();
+  ctx.fill();
+}
+
+// Each drawing takes the whole obstacle so it can draw groups and flying heights.
+const row = (draw) => (ctx, o, base, time) => {
+  for (let i = 0; i < o.count; i++) {
+    draw(ctx, o.x + i * o.type.spacing, base, o.type.width, o.height, time + i * 1.7, i);
+  }
+};
+
+function flyingStar(ctx, o, base, time) {
+  const cy = base - o.altitude - obstacleBob(o) - o.height / 2;
+  drawMoravianStar(ctx, o.x + o.width / 2, cy, 15, { points: 8, glow: 0.6, rotation: time * 2.4 });
+}
+
+export const OBSTACLE_ART = {
+  candle: row(oneCandle),
+  chick: row(oneChick),
+  books: (ctx, o, base) => books(ctx, o.x, base, o.width),
+  star: (ctx, o, base, time) => starOnStand(ctx, o.x, base, o.width, o.height, time),
+  beams: (ctx, o, base) => beams(ctx, o.x, base, o.width, o.height),
+  tree: (ctx, o, base, time) => tree(ctx, o.x, base, o.width, o.height, time),
+  flyer: flyingStar,
+};
 
 function drawObstacles(ctx, game, time) {
   for (const o of game.obstacles) {
-    OBSTACLE_ART[o.type.id](ctx, o.x, GROUND, o.type.width, o.type.height, time);
+    OBSTACLE_ART[o.type.id](ctx, o, GROUND, time);
   }
 }
 
@@ -417,7 +473,8 @@ function leg(ctx, hipX, hipY, angle, bend, upper, lower, color) {
 }
 
 // Leg angles for the double-suspension gallop, a standing pose and a flying leap.
-function legPose(hound, phase, distance) {
+function legPose(hound, phase, distance, crouched) {
+  if (crouched) return { front: [-1.2, 2.0, -1.0], hind: [1.1, -2.0, 0.95], bob: 14 };
   if (phase === "ready") return { front: [0.05, 0, -0.05], hind: [-0.05, 0, 0.05], bob: 0 };
   if (!hound.grounded || phase === "over") {
     return { front: [-1.1, 0.9, -0.95], hind: [1.0, -0.6, 0.85], bob: 0 };
@@ -433,11 +490,13 @@ function legPose(hound, phase, distance) {
 
 function drawHound(ctx, game, time) {
   const { hound, phase, distance } = game;
-  const pose = legPose(hound, phase, distance);
+  const crouched = phase === "running" && hound.ducking && hound.grounded;
+  const pose = legPose(hound, phase, distance, crouched);
   const crashed = phase === "over";
   ctx.save();
   ctx.translate(HOUND.x, GROUND - hound.y + pose.bob);
   if (crashed) ctx.rotate(-0.12);
+  if (crouched) ctx.rotate(0.1);
 
   // Shadow on the ground (stays on the ground while jumping).
   ctx.save();
@@ -620,7 +679,7 @@ function drawTitle(ctx, time) {
   ctx.font = `12px ${MONO}`;
   ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
   ctx.fillText(
-    "SPACE / ↑ jump (hold for higher)   M mute   N music   P pause   H help",
+    "SPACE / ↑ jump (hold for higher)   ↓ duck   M mute   N music   P pause   H help",
     cx,
     y + 172,
   );
@@ -680,16 +739,39 @@ function drawOverlay(ctx, game, time) {
   else if (game.paused) drawPaused(ctx);
 }
 
+// ---------- Dust, sparks and stars ----------
+
+function drawParticles(ctx, particles) {
+  for (const p of particles) {
+    ctx.globalAlpha = Math.max(0, Math.min(1, p.life / p.max));
+    if (p.kind === "star") {
+      drawMoravianStar(ctx, p.x, p.y, p.size * 1.8, { points: 8, rotation: p.rotation });
+    } else {
+      ctx.fillStyle = p.kind === "dust" ? C.dust : C.goldLight;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, TAU);
+      ctx.fill();
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+
 // ---------- Whole frame ----------
 
 export function drawScene(ctx, game, time, { muted = false, musicOn = true } = {}) {
+  ctx.save();
+  if (game.shake > 0) {
+    ctx.translate((hash(time * 60) - 0.5) * game.shake, (hash(time * 60 + 7) - 0.5) * game.shake);
+  }
   drawSky(ctx, time);
   drawMountain(ctx, game.distance, time);
   drawSkyline(ctx, game.distance, time);
   drawGround(ctx, game.distance);
   drawObstacles(ctx, game, time);
   drawHound(ctx, game, time);
+  drawParticles(ctx, game.particles);
   drawSnow(ctx, game.distance, time);
+  ctx.restore();
   drawHud(ctx, game, muted, musicOn);
   drawOverlay(ctx, game, time);
 }

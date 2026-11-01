@@ -4,6 +4,8 @@ export const CONTROLS = [
   { code: "Space", label: "Space", action: "jump" },
   { code: "ArrowUp", label: "↑", action: "jump" },
   { code: "KeyW", label: "W", action: "jump" },
+  { code: "ArrowDown", label: "↓", action: "duck" },
+  { code: "KeyS", label: "S", action: "duck" },
   { code: "KeyM", label: "M", action: "mute" },
   { code: "KeyN", label: "N", action: "music" },
   { code: "KeyP", label: "P", action: "pause" },

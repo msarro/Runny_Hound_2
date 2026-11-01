@@ -2,9 +2,9 @@
 import { drawMoravianStar, drawScene, OBSTACLE_ART } from "./art.js";
 import { createAudio } from "./audio.js";
 import { WORLD } from "./config.js";
-import { createGame, press, release, step, togglePause } from "./game.js";
+import { createGame, press, pressDuck, release, releaseDuck, step, togglePause } from "./game.js";
 import { HELP_SECTIONS } from "./help.js";
-import { OBSTACLE_TYPES } from "./obstacles.js";
+import { OBSTACLE_TYPES, createObstacle, obstacleVariants } from "./obstacles.js";
 import { PALETTE } from "./palette.js";
 import { actionForKey } from "./input.js";
 import { shouldPlayMusic } from "./music.js";
@@ -90,6 +90,7 @@ document.addEventListener("keydown", (event) => {
   event.preventDefault(); // stop Space from scrolling the page
   if (event.repeat) return;
   if (action === "jump") jump();
+  if (action === "duck") handle(pressDuck(game));
   if (action === "pause") togglePause(game);
   if (action === "mute") {
     audio.setMuted(!audio.muted);
@@ -101,7 +102,9 @@ document.addEventListener("keydown", (event) => {
   }
 });
 document.addEventListener("keyup", (event) => {
-  if (actionForKey(event.code) === "jump") release(game);
+  const action = actionForKey(event.code);
+  if (action === "jump") release(game);
+  if (action === "duck") releaseDuck(game);
 });
 
 // ----- Touch and mouse -----
@@ -127,7 +130,22 @@ for (const type of ["pointerup", "pointercancel", "pointerleave"]) {
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) setPaused(true);
 });
-globalThis.addEventListener("blur", () => setPaused(true));
+globalThis.addEventListener("blur", () => {
+  setPaused(true);
+  releaseDuck(game);
+});
+
+// ----- On-screen Duck button (touch screens) -----
+const duckButton = document.getElementById("duck-btn");
+duckButton.addEventListener("pointerdown", (event) => {
+  event.preventDefault();
+  if (dialog.open) return;
+  audio.unlock();
+  handle(pressDuck(game));
+});
+for (const type of ["pointerup", "pointercancel", "pointerleave"]) {
+  duckButton.addEventListener(type, () => releaseDuck(game));
+}
 
 // ----- Page decorations, all drawn in code: header star, tab icon, obstacle cards -----
 function sharpCanvas(canvas, width, height) {
@@ -160,10 +178,11 @@ for (const type of OBSTACLE_TYPES) {
   const ground = 70;
   context.fillStyle = "rgba(0, 43, 92, 0.12)";
   context.fillRect(0, ground, 96, 80 - ground);
-  const scale = Math.min(1, 84 / type.width, 62 / type.height);
-  context.translate(48, ground);
+  const sample = createObstacle(type, 0, obstacleVariants(type)[0]);
+  const scale = Math.min(1, 84 / sample.width, 62 / (sample.height + sample.altitude));
+  context.translate(48 - (sample.width * scale) / 2, ground);
   context.scale(scale, scale);
-  OBSTACLE_ART[type.id](context, -type.width / 2, 0, type.width, type.height, 0.4);
+  OBSTACLE_ART[type.id](context, sample, 0, 0.4);
   const caption = document.createElement("figcaption");
   const name = document.createElement("strong");
   name.textContent = type.name;

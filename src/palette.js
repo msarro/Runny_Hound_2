@@ -36,4 +36,10 @@ export const PALETTE = {
   pine: "#1f5c3a",
   pineLight: "#2e7d4f",
   trunk: "#5b3a22",
+  chickYellow: "#ffd84a",
+  chickShade: "#e8b923",
+  chickSugar: "#fff3b0",
+  beak: "#f08a24",
+  chickEye: "#4a2c17",
+  dust: "#c9b9a6",
 };

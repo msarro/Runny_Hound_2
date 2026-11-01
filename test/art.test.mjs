@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { drawScene, OBSTACLE_ART, wrapText } from "../src/art.js";
-import { createGame, press, step } from "../src/game.js";
-import { OBSTACLE_TYPES, createObstacle } from "../src/obstacles.js";
+import { createGame, press, pressDuck, releaseDuck, step } from "../src/game.js";
+import { OBSTACLE_TYPES, createObstacle, obstacleVariants } from "../src/obstacles.js";
 import { createRng } from "../src/random.js";
 
 const METHODS = new Set(
@@ -122,7 +122,12 @@ test("the title screen matches Runny Hound 1", () => {
   assert.ok(texts.includes("A Greyhound’s dash through Bethlehem, PA — the Christmas City"));
   assert.ok(texts.includes("PRESS SPACE OR TAP TO RUN"));
   assert.ok(
-    texts.some((s) => s.startsWith("SPACE / ↑ jump (hold for higher)") && s.includes("H help")),
+    texts.some(
+      (s) =>
+        s.startsWith("SPACE / ↑ jump (hold for higher)") &&
+        s.includes("↓ duck") &&
+        s.includes("H help"),
+    ),
   );
   assert.ok(!textsFor(game, 0.5).includes("PRESS SPACE OR TAP TO RUN"), "the prompt blinks");
 });
@@ -166,4 +171,26 @@ test("the score blinks at a milestone, showing the round hundred", () => {
   assert.ok(textsFor(game, 0).includes("00200"));
   game.flash = 0;
   assert.ok(textsFor(game, 0).includes("00213"));
+});
+
+test("every group size and star height draws", () => {
+  const game = createGame({ rng: createRng(1) });
+  press(game);
+  game.obstacles = OBSTACLE_TYPES.flatMap((t, i) =>
+    obstacleVariants(t).map((v, j) => createObstacle(t, 100 + i * 140 + j * 30, v)),
+  );
+  drawScene(strictContext(), game, 1.1);
+});
+
+test("the ducking hound, flying dust and a crash with sparks and shake all draw", () => {
+  const game = createGame({ rng: createRng(1) });
+  press(game);
+  for (let i = 0; i < 120; i++) step(game, 1 / 120);
+  pressDuck(game);
+  for (let i = 0; i < 30; i++) step(game, 1 / 120);
+  drawScene(strictContext(), game, 1);
+  releaseDuck(game);
+  while (game.phase !== "over") step(game, 1 / 120);
+  assert.ok(game.shake > 0 && game.particles.length > 0);
+  drawScene(strictContext(), game, 2);
 });

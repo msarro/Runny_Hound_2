@@ -54,6 +54,16 @@ const SOUNDS = {
     tone(ctx, out, { type: "square", from: 300, to: 620, length: 0.12, volume: 0.08 });
     noise(ctx, out, { length: 0.05, volume: 0.15, filter: 900 });
   },
+  // A soft thump of paws on brick.
+  land(ctx, out) {
+    noise(ctx, out, { length: 0.06, volume: 0.22, filter: 320 });
+    tone(ctx, out, { type: "sine", from: 120, to: 80, length: 0.08, volume: 0.1 });
+  },
+  // A quick downward swoosh.
+  duck(ctx, out) {
+    tone(ctx, out, { type: "triangle", from: 420, to: 220, length: 0.12, volume: 0.08 });
+    noise(ctx, out, { length: 0.1, volume: 0.06, filter: 1500 });
+  },
   // A small bell chord, like a church bell over Bethlehem.
   milestone(ctx, out) {
     tone(ctx, out, { type: "sine", from: 880, length: 0.5, volume: 0.18 });

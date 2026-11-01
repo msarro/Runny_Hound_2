@@ -15,7 +15,9 @@ test("every game sound plays and every note it starts is also stopped", () => {
 });
 
 test("the game has sounds for start, jump, milestone and crash", () => {
-  for (const name of ["start", "jump", "milestone", "crash"]) assert.ok(SOUND_NAMES.includes(name));
+  for (const name of ["start", "jump", "land", "duck", "milestone", "crash"]) {
+    assert.ok(SOUND_NAMES.includes(name), name);
+  }
 });
 
 test("nothing plays while muted, and sound returns when unmuted", () => {

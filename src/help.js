@@ -7,7 +7,7 @@ export const HELP_SECTIONS = [
     title: "How to play",
     lines: [
       "You are the Moravian Greyhound, racing through Bethlehem, PA at night.",
-      "Jump over obstacles from campus and the Christmas City. The longer you run, the faster it gets and the higher your score.",
+      "Jump over obstacles from campus and the Christmas City, and duck under flying stars. The longer you run, the faster it gets and the higher your score.",
       "A bell rings every 100 points. Your best score is remembered on this device.",
     ],
   },
@@ -16,6 +16,7 @@ export const HELP_SECTIONS = [
     lines: [
       "Space (or Up arrow, or W): jump. Also starts and restarts a run.",
       "Hold Space for a high jump; tap it for a short hop.",
+      "↓ (or S): duck under flying stars; in the air, drop faster.",
       "Tap or click the game: jump (on phones and tablets).",
       "M: all sound on or off",
       "N: music on or off",

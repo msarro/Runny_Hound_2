@@ -18,7 +18,7 @@ test("help tells players that Space makes the greyhound jump", () => {
 });
 
 test("help lists every control", () => {
-  for (const control of ["Space", "Hold", "M:", "N:", "P:", "H:", "Tap", "Esc"])
+  for (const control of ["Space", "Hold", "↓", "M:", "N:", "P:", "H:", "Tap", "Esc"])
     assert.ok(text.includes(control), control);
 });
 
@@ -46,4 +46,9 @@ test("help credits the music: In dulci jubilo in Bach's harmonization", () => {
   assert.match(text, /Bach/);
   assert.match(text, /BWV 368/);
   assert.match(text, /trombone choir/i);
+});
+
+test("help explains ducking", () => {
+  assert.match(text, /duck under flying stars/i);
+  assert.match(text, /drop faster/i);
 });
