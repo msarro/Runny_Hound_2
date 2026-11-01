@@ -22,3 +22,4 @@ wiki on every merge to `main`, and edits made directly on the wiki are overwritt
 - [When a check fails](runbooks/failed-checks.md)
 - [Add or update a dependency](runbooks/dependencies.md)
 - [Branch protection settings](runbooks/branch-protection.md)
+- [Publishing docs to the wiki](runbooks/wiki.md)

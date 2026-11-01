@@ -4,7 +4,7 @@ import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "n
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { rewriteLinks, wikiPageName } from "./lib/wiki.mjs";
+import { explainCloneFailure, rewriteLinks, wikiPageName } from "./lib/wiki.mjs";
 
 const { GITHUB_TOKEN, GITHUB_REPOSITORY, GITHUB_SHA = "local" } = process.env;
 if (!GITHUB_TOKEN || !GITHUB_REPOSITORY) {
@@ -17,12 +17,23 @@ const wikiDir = mkdtempSync(path.join(tmpdir(), "wiki-"));
 const git = (...args) => execFileSync("git", ["-C", wikiDir, ...args], { stdio: "inherit" });
 const blobBase = `https://github.com/${GITHUB_REPOSITORY}/blob/main`;
 
-execFileSync("git", [
-  "clone",
-  "--depth=1",
-  `https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git`,
-  wikiDir,
-]);
+try {
+  execFileSync(
+    "git",
+    [
+      "clone",
+      "--depth=1",
+      `https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git`,
+      wikiDir,
+    ],
+    { stdio: ["ignore", "ignore", "pipe"] },
+  );
+} catch (error) {
+  console.error(
+    explainCloneFailure(error.stderr, { repository: GITHUB_REPOSITORY, token: GITHUB_TOKEN }),
+  );
+  process.exit(1);
+}
 for (const entry of readdirSync(wikiDir)) {
   if (entry !== ".git") rmSync(path.join(wikiDir, entry), { recursive: true });
 }

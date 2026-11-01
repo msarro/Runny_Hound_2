@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { wikiPageName, rewriteLinks } from "../scripts/lib/wiki.mjs";
+import { wikiPageName, rewriteLinks, explainCloneFailure } from "../scripts/lib/wiki.mjs";
 
 test("docs/index.md becomes the wiki Home page", () => {
   assert.equal(wikiPageName("index.md"), "Home");
@@ -38,4 +38,37 @@ test("links to files outside docs point at the file on GitHub", () => {
 test("web links and anchors are left alone", () => {
   const md = "[site](https://example.com/a.md) [top](#top)";
   assert.equal(rewriteLinks(md, "index.md"), md);
+});
+
+const repo = { repository: "owner/game", token: "ghs_secret123" };
+const notFound = Buffer.from(
+  "Cloning into '/tmp/wiki-x'...\nremote: Repository not found.\nfatal: repository 'https://x-access-token:ghs_secret123@github.com/owner/game.wiki.git/' not found\n",
+);
+
+test("a wiki with no pages yet gets a plain explanation and the fix", () => {
+  const message = explainCloneFailure(notFound, repo);
+  assert.match(message, /no pages yet/i);
+  assert.match(message, /Create the first page/);
+  assert.match(message, /https:\/\/github\.com\/owner\/game\/wiki/);
+  assert.match(message, /Run workflow/);
+});
+
+test("other failures show git's error as readable text, not numbers", () => {
+  const message = explainCloneFailure(
+    Buffer.from("fatal: unable to access: Could not resolve host\n"),
+    repo,
+  );
+  assert.match(message, /Could not resolve host/);
+  assert.doesNotMatch(message, /\d+, \d+, \d+/);
+});
+
+test("the access token is never shown", () => {
+  for (const stderr of [
+    notFound,
+    Buffer.from("fatal: bad token ghs_secret123\n"),
+    "ghs_secret123",
+    undefined,
+  ]) {
+    assert.doesNotMatch(explainCloneFailure(stderr, repo), /ghs_secret123/);
+  }
 });
