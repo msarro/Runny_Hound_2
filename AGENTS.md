@@ -51,7 +51,10 @@ university-themed obstacles, in Moravian-inspired colors. See
   assignment ([decision 0002](docs/decisions/0002-no-sign-in.md)).
 - **Assets:** all graphics and sounds are generated in code. No downloaded images,
   fonts or audio, no official Moravian logos, and nothing loaded from the internet
-  (`test/assets.test.mjs` enforces this).
+  (`test/assets.test.mjs` enforces this; ordinary clickable links are allowed,
+  [decision 0006](docs/decisions/0006-parity-with-runny-hound-1.md)).
+- **Parity with Runny Hound 1:** the page and screens match it; keep them matching
+  unless the owner decides otherwise ([decision 0006](docs/decisions/0006-parity-with-runny-hound-1.md)).
 - **Music:** only public-domain pieces, with the source recorded in a decision record.
   Take notes from a written score, never from memory
   ([decision 0004](docs/decisions/0004-background-music.md)).

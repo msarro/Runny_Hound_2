@@ -15,6 +15,7 @@ wiki on every merge to `main`, and edits made directly on the wiki are overwritt
 - [0003: Tooling choices](decisions/0003-tooling.md)
 - [0004: Background music](decisions/0004-background-music.md)
 - [0005: Project license, CC BY-NC-ND 4.0](decisions/0005-project-license.md)
+- [0006: Parity with Runny Hound 1](decisions/0006-parity-with-runny-hound-1.md)
 
 ## Runbooks
 

@@ -19,7 +19,7 @@ export const HELP_SECTIONS = [
       "Tap or click the game: jump (on phones and tablets).",
       "M: all sound on or off",
       "N: music on or off",
-      "P: pause",
+      "P: pause (Esc also pauses). Space or a tap resumes.",
       "H: open or close this help (the game pauses while it's open)",
     ],
   },

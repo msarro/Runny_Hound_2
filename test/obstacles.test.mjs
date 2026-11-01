@@ -102,3 +102,13 @@ test("every obstacle can be cleared with a well-timed jump at every speed", () =
     }
   }
 });
+
+test("every obstacle has a phrase for sentences that keeps proper names capitalized", () => {
+  for (const t of OBSTACLE_TYPES) {
+    assert.ok(t.phrase.toLowerCase().endsWith(t.name.toLowerCase()), t.id);
+  }
+  const phrase = (id) => OBSTACLE_TYPES.find((t) => t.id === id).phrase;
+  assert.equal(phrase("star"), "a Moravian Star");
+  assert.equal(phrase("beams"), "Bethlehem Steel beams");
+  assert.equal(phrase("tree"), "a Christmas tree");
+});

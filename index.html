@@ -2,30 +2,78 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Runny Hound</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Runny Hound — A Greyhound’s Dash Through Bethlehem</title>
+    <meta
+      name="description"
+      content="An endless-runner browser game starring a Greyhound racing through Bethlehem, PA."
+    />
+    <link rel="icon" href="data:," />
     <link rel="stylesheet" href="src/style.css" />
   </head>
   <body>
-    <header>
-      <h1>Runny Hound</h1>
+    <header class="brand-bar">
+      <canvas class="brand-star" id="brand-star" width="56" height="56" aria-hidden="true"></canvas>
+      <div class="brand-text">
+        <h1>Runny Hound</h1>
+        <p>Go, Greyhounds! Leap through Bethlehem, the Christmas City.</p>
+      </div>
       <button type="button" id="help-button" aria-haspopup="dialog" aria-controls="help-dialog">
         Help
       </button>
     </header>
+
     <main>
-      <canvas
-        id="game"
-        width="960"
-        height="320"
-        tabindex="0"
-        aria-label="Runny Hound game. Press Space to jump. Press H for help."
-      >
-        The game needs a browser with canvas support.
-      </canvas>
-      <p class="hint">Space to jump · Hold for higher · M sound · N music · P pause · H help</p>
+      <div class="stage">
+        <canvas
+          id="game"
+          width="960"
+          height="320"
+          tabindex="0"
+          aria-label="Runny Hound game. Press Space to jump. Press H for help."
+        >
+          The game needs a browser with canvas support.
+        </canvas>
+        <div class="touch-controls">
+          <button id="jump-btn" type="button" aria-label="Jump">▲ Jump</button>
+        </div>
+      </div>
       <p id="status" class="visually-hidden" aria-live="polite"></p>
+
+      <section class="how" id="how-to-play" aria-labelledby="how-title">
+        <h2 id="how-title">How to play</h2>
+        <ul>
+          <li>
+            <kbd>Space</kbd> / <kbd>↑</kbd> / <kbd>W</kbd> / tap: jump. Hold for a higher leap.
+          </li>
+          <li>
+            <kbd>M</kbd> mute all sound · <kbd>N</kbd> toggle music · <kbd>P</kbd> or
+            <kbd>Esc</kbd> pause (<kbd>Space</kbd> or tap resumes)
+          </li>
+          <li><kbd>H</kbd> help, including the story behind each obstacle</li>
+        </ul>
+      </section>
+
+      <section class="legend" id="obstacles" aria-labelledby="obstacles-title">
+        <h2 id="obstacles-title">Meet the obstacles</h2>
+        <div class="cards" id="obstacle-cards"></div>
+      </section>
     </main>
+
+    <footer>
+      <p>
+        All graphics and sounds are generated in code. No image or audio files are used.<br />
+        Music: <em>In dulci jubilo</em> (“Good Christian Men, Rejoice”), J. S. Bach, BWV 368, played
+        like a Moravian trombone choir.<br />
+        A fan-made demo inspired by the Moravian University Greyhounds; not an official university
+        product.<br />
+        © 2026 Matty Sarro. Licensed under
+        <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="license"
+          >CC BY-NC-ND 4.0</a
+        >.
+      </p>
+    </footer>
+
     <dialog id="help-dialog" aria-labelledby="help-title">
       <h2 id="help-title" tabindex="-1" autofocus>Help</h2>
       <div id="help-content"></div>

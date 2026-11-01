@@ -1,12 +1,14 @@
 import { PHYSICS, WORLD } from "./config.js";
 
 // Things from Moravian University and Bethlehem, PA to jump over.
+// phrase is the name as used in a sentence ("You tripped over a Moravian Star").
 // width/height are the drawing size in pixels. The fun fact is shown after a crash
 // and in the in-app help.
 export const OBSTACLE_TYPES = [
   {
     id: "candle",
     name: "Lovefeast candle",
+    phrase: "a lovefeast candle",
     width: 22,
     height: 48,
     fact: "Beeswax candles trimmed with red paper are handed out at Moravian Christmas Eve lovefeasts.",
@@ -14,6 +16,7 @@ export const OBSTACLE_TYPES = [
   {
     id: "books",
     name: "Stack of books",
+    phrase: "a stack of books",
     width: 46,
     height: 40,
     fact: "Moravian University traces its roots to 1742, making it one of the oldest colleges in the United States.",
@@ -21,6 +24,7 @@ export const OBSTACLE_TYPES = [
   {
     id: "star",
     name: "Moravian Star",
+    phrase: "a Moravian Star",
     width: 50,
     height: 60,
     fact: "The many-pointed Moravian Star began as a geometry lesson at a Moravian boys' school in Germany in the 1800s.",
@@ -28,6 +32,7 @@ export const OBSTACLE_TYPES = [
   {
     id: "beams",
     name: "Bethlehem Steel beams",
+    phrase: "Bethlehem Steel beams",
     width: 92,
     height: 38,
     fact: "Bethlehem Steel made the steel for the Golden Gate Bridge and many New York City skyscrapers.",
@@ -35,6 +40,7 @@ export const OBSTACLE_TYPES = [
   {
     id: "tree",
     name: "Christmas tree",
+    phrase: "a Christmas tree",
     width: 48,
     height: 82,
     fact: "Bethlehem has called itself Christmas City, USA since 1937.",

@@ -57,30 +57,30 @@ several courses: that proves the game never generates an impossible sequence.
 
 ## Pieces
 
-| Path                  | What it is                                                                                            |
-| --------------------- | ----------------------------------------------------------------------------------------------------- |
-| `index.html`          | The page: canvas, Help button and dialog, screen-reader status line.                                  |
-| `src/main.js`         | Wires the browser to the game: loop, keyboard, touch, sound, saving.                                  |
-| `src/game.js`         | Game rules: phases (ready, running, over), score, speed, spawning, crashes.                           |
-| `src/hound.js`        | Jump physics and the hound's hitbox.                                                                  |
-| `src/obstacles.js`    | The obstacle catalog (with fun facts), hitboxes, spacing rules.                                       |
-| `src/collision.js`    | Box overlap test.                                                                                     |
-| `src/config.js`       | Tuning numbers: world size, gravity, speeds, scoring.                                                 |
-| `src/art.js`          | All drawing: sky, South Mountain star, skyline, snow, bricks, obstacles, hound, text.                 |
-| `src/audio.js`        | Sound effects (start yips, jump chirp, milestone bell, crash) and the shared audio context.           |
-| `src/music.js`        | Background music player: schedules notes ahead, loops, pauses/resumes; trombone voice.                |
-| `src/score.js`        | _In dulci jubilo_, Bach BWV 368, in four parts ([decision 0004](decisions/0004-background-music.md)). |
-| `src/notation.js`     | Reads the text notation used in `score.js` and checks every bar.                                      |
-| `src/palette.js`      | Colors. The first four must match `src/style.css` (tested).                                           |
-| `src/storage.js`      | High score and mute setting in `localStorage`, safe if blocked.                                       |
-| `src/input.js`        | Key-to-action mapping.                                                                                |
-| `src/help.js`         | Player help; the obstacle list is generated from `obstacles.js`.                                      |
-| `test/`               | Automated tests (`node --test`).                                                                      |
-| `scripts/`            | Project tools: local server, license check, SBOM, wiki publishing.                                    |
-| `license-policy.json` | Recorded usage and the allowed dependency licenses.                                                   |
-| `sbom.cdx.json`       | Software bill of materials (CycloneDX), generated from the lockfile.                                  |
-| `.githooks/`          | Local checks: secret scan before commit, all checks before push.                                      |
-| `.github/workflows/`  | The CI pipeline and wiki publishing.                                                                  |
+| Path                  | What it is                                                                                                                |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `index.html`          | The page: header, canvas, touch Jump button, How to play, obstacle cards, footer, Help dialog, screen-reader status line. |
+| `src/main.js`         | Wires the browser to the game: loop, keyboard, touch, sound, saving; draws the header star, tab icon and obstacle cards.  |
+| `src/game.js`         | Game rules: phases (ready, running, over), score, speed, spawning, crashes.                                               |
+| `src/hound.js`        | Jump physics and the hound's hitbox.                                                                                      |
+| `src/obstacles.js`    | The obstacle catalog (with fun facts), hitboxes, spacing rules.                                                           |
+| `src/collision.js`    | Box overlap test.                                                                                                         |
+| `src/config.js`       | Tuning numbers: world size, gravity, speeds, scoring.                                                                     |
+| `src/art.js`          | All drawing: sky, South Mountain star, skyline, snow, bricks, obstacles, hound, text.                                     |
+| `src/audio.js`        | Sound effects (start yips, jump chirp, milestone bell, crash) and the shared audio context.                               |
+| `src/music.js`        | Background music player: schedules notes ahead, loops, pauses/resumes; trombone voice.                                    |
+| `src/score.js`        | _In dulci jubilo_, Bach BWV 368, in four parts ([decision 0004](decisions/0004-background-music.md)).                     |
+| `src/notation.js`     | Reads the text notation used in `score.js` and checks every bar.                                                          |
+| `src/palette.js`      | Colors. The first four must match `src/style.css` (tested).                                                               |
+| `src/storage.js`      | High score and mute setting in `localStorage`, safe if blocked.                                                           |
+| `src/input.js`        | Every control: key, label shown to players, action.                                                                       |
+| `src/help.js`         | Player help; the obstacle list is generated from `obstacles.js`.                                                          |
+| `test/`               | Automated tests (`node --test`).                                                                                          |
+| `scripts/`            | Project tools: local server, license check, SBOM, wiki publishing.                                                        |
+| `license-policy.json` | Recorded usage and the allowed dependency licenses.                                                                       |
+| `sbom.cdx.json`       | Software bill of materials (CycloneDX), generated from the lockfile.                                                      |
+| `.githooks/`          | Local checks: secret scan before commit, all checks before push.                                                          |
+| `.github/workflows/`  | The CI pipeline and wiki publishing.                                                                                      |
 
 ## Tuning the game
 

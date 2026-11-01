@@ -11,13 +11,16 @@ about it. The music is _In dulci jubilo_ ("Good Christian Men, Rejoice") in J. S
 harmonization (BWV 368), played like a Moravian trombone choir. How it is built:
 [docs/architecture.md](docs/architecture.md).
 
-| Control                   | Action                                                 |
-| ------------------------- | ------------------------------------------------------ |
-| `Space` / `↑` / `W` / tap | Jump (hold for higher, tap for a hop); start / restart |
-| `M`                       | All sound on/off (remembered)                          |
-| `N`                       | Music on/off (remembered)                              |
-| `P`                       | Pause                                                  |
-| `H`                       | Help (pauses the game)                                 |
+| Control                   | Action                                                        |
+| ------------------------- | ------------------------------------------------------------- |
+| `Space` / `↑` / `W` / tap | Jump (hold for higher, tap for a hop); start, restart, resume |
+| `M`                       | All sound on/off (remembered)                                 |
+| `N`                       | Music on/off (remembered)                                     |
+| `P` / `Esc`               | Pause                                                         |
+| `H`                       | Help (pauses the game)                                        |
+
+On phones and tablets a **▲ Jump** button appears under the game. The page and screens
+match Runny Hound 1 ([decision 0006](docs/decisions/0006-parity-with-runny-hound-1.md)).
 
 ## Play it on your computer
 
@@ -29,7 +32,8 @@ npm install   # installs the tools and turns on the safety checks (git hooks)
 npm start     # then open http://localhost:8000
 ```
 
-Press **H** or the **Help** button in the game for player help.
+Below the game, the page explains how to play and introduces each obstacle. Press **H** or
+the **Help** button for the full player help.
 
 ## How work gets done here
 

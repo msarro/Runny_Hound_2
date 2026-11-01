@@ -152,7 +152,7 @@ test("after a short pause, Space starts a fresh run and keeps the high score", (
   assert.equal(game.crashedInto, null);
 });
 
-test("pausing freezes the run and ignores jumps; unpausing resumes", () => {
+test("pausing freezes the run; P unpauses it", () => {
   const game = newGame({ obstacles: false });
   press(game);
   run(game, 1);
@@ -160,10 +160,19 @@ test("pausing freezes the run and ignores jumps; unpausing resumes", () => {
   const distance = game.distance;
   run(game, 1);
   assert.equal(game.distance, distance);
-  assert.deepEqual(press(game), []);
   togglePause(game);
   run(game, 0.1);
   assert.ok(game.distance > distance);
+});
+
+test("Space (or a tap) resumes a paused run without jumping, like Runny Hound 1", () => {
+  const game = newGame({ obstacles: false });
+  press(game);
+  run(game, 1);
+  togglePause(game);
+  assert.deepEqual(press(game), ["resume"]);
+  assert.equal(game.paused, false);
+  assert.equal(game.hound.grounded, true);
 });
 
 test("pause does nothing before the run starts", () => {
@@ -193,4 +202,29 @@ test("an attentive player can survive two minutes on any course", () => {
     assert.ok(game.score > 1000, `seed ${seed} score ${game.score}`);
     assert.ok(maxOnScreen <= 4, `obstacles are not cleaned up (${maxOnScreen})`);
   }
+});
+
+test("the score flashes for a moment at each milestone", () => {
+  const game = newGame({ obstacles: false });
+  press(game);
+  assert.equal(game.flash, 0);
+  while (!step(game, DT).includes("milestone"));
+  assert.ok(game.flash > 1);
+  run(game, 1.3);
+  assert.equal(game.flash, 0);
+});
+
+test("game over remembers whether the score was a new best", () => {
+  const first = newGame();
+  press(first);
+  runUntilOver(first);
+  assert.equal(first.newHighScore, true);
+  const second = newGame({ highScore: 1_000_000 });
+  press(second);
+  runUntilOver(second);
+  assert.equal(second.newHighScore, false);
+  run(first, RESTART_DELAY + 0.05);
+  press(first);
+  assert.equal(first.newHighScore, false);
+  assert.equal(first.flash, 0);
 });

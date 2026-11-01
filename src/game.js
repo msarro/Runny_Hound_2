@@ -6,10 +6,13 @@ import { createObstacle, nextGap, obstacleHitbox, pickType } from "./obstacles.j
 // Seconds after a crash before Space starts a new run, so a held key doesn't restart.
 export const RESTART_DELAY = 0.5;
 const FIRST_OBSTACLE_DISTANCE = 600;
+const FLASH_SECONDS = 1.2;
 
 // phase is "ready" (title screen), "running" or "over".
-// Functions return a list of events ("start", "jump", "milestone", "crash",
+// Functions return a list of events ("start", "jump", "resume", "milestone", "crash",
 // "highscore") for the sound and screen-reader code to react to.
+// flash counts down after a milestone (the score blinks); newHighScore is set on a
+// crash that beat the best score.
 export function createGame({ rng = Math.random, highScore = 0, obstacles = true } = {}) {
   return {
     rng,
@@ -31,6 +34,8 @@ function freshRun() {
     untilNextObstacle: FIRST_OBSTACLE_DISTANCE,
     overTime: 0,
     crashedInto: null,
+    flash: 0,
+    newHighScore: false,
   };
 }
 
@@ -46,7 +51,10 @@ export function press(game) {
     startJump(game.hound);
     return ["start", "jump"];
   }
-  if (game.paused) return [];
+  if (game.paused) {
+    game.paused = false;
+    return ["resume"];
+  }
   return startJump(game.hound) ? ["jump"] : [];
 }
 
@@ -66,6 +74,7 @@ export function step(game, dt) {
   if (game.phase !== "running" || game.paused) return [];
 
   const events = [];
+  game.flash = Math.max(0, game.flash - dt);
   game.speed = Math.min(SPEED.max, game.speed + SPEED.acceleration * dt);
   const moved = game.speed * dt;
   game.distance += moved;
@@ -73,6 +82,7 @@ export function step(game, dt) {
   const score = Math.floor(game.distance / SCORE.pixelsPerPoint);
   if (Math.floor(score / SCORE.milestone) > Math.floor(game.score / SCORE.milestone)) {
     events.push("milestone");
+    game.flash = FLASH_SECONDS;
   }
   game.score = score;
 
@@ -96,8 +106,10 @@ export function step(game, dt) {
     game.phase = "over";
     game.crashedInto = hit.type;
     events.push("crash");
+    game.flash = 0;
     if (game.score > game.highScore) {
       game.highScore = game.score;
+      game.newHighScore = true;
       events.push("highscore");
     }
   }
