@@ -1,0 +1,58 @@
+/* Moravian-inspired palette. Values are approximations chosen for this demo; check
+   them against the official Moravian University brand guide before any public use. */
+:root {
+  --moravian-blue: #0a2240;
+  --greyhound-grey: #a2aaad;
+  --star-gold: #f2c75c;
+  --snow: #f7f7f2;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--moravian-blue);
+  color: var(--snow);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+}
+
+h1 {
+  margin: 0;
+  color: var(--star-gold);
+}
+
+button {
+  font: inherit;
+  padding: 0.4rem 1rem;
+  border: 2px solid var(--star-gold);
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--star-gold);
+  cursor: pointer;
+}
+
+main {
+  display: grid;
+  place-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+canvas {
+  max-width: 100%;
+  background: var(--greyhound-grey);
+  border-radius: 0.5rem;
+}
+
+dialog {
+  max-width: 32rem;
+  border: 2px solid var(--star-gold);
+  border-radius: 0.5rem;
+  background: var(--moravian-blue);
+  color: var(--snow);
+}
