@@ -1,0 +1,33 @@
+{
+  "name": "runny-hound",
+  "version": "0.1.0",
+  "description": "A Moravian University greyhound endless-runner browser game. All art and sound are generated in code.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "prepare": "git config core.hooksPath .githooks",
+    "start": "node scripts/serve.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "test": "node --test --test-reporter=spec",
+    "secrets": "gitleaks git --redact --no-banner . && gitleaks dir --redact --no-banner .",
+    "audit": "npm audit --audit-level=low",
+    "licenses": "node scripts/check-licenses.mjs",
+    "sbom": "node scripts/sbom.mjs",
+    "sbom:check": "node scripts/sbom.mjs --check",
+    "check": "npm run format:check && npm run lint && npm test && npm run secrets && npm run audit && npm run licenses && npm run sbom:check"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.14.0",
+    "globals": "17.14.0",
+    "prettier": "3.9.10"
+  },
+  "overrides": {
+    "minimatch": "11.0.3"
+  }
+}

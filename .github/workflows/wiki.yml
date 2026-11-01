@@ -1,0 +1,28 @@
+# Publishes docs/ to the GitHub wiki whenever main changes. The repository is the
+# source of truth; edits made directly in the wiki are overwritten.
+name: Publish docs to wiki
+
+on:
+  push:
+    branches: [main]
+    paths: ["docs/**", "scripts/publish-wiki.mjs", "scripts/lib/wiki.mjs"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wiki
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - run: node scripts/publish-wiki.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
