@@ -93,16 +93,77 @@ test("long text wraps to fit and keeps every word", () => {
   assert.equal(lines.join(" "), text);
 });
 
-test("the screen says when music or all sound is off", () => {
+const KEYS_HINT = "[M] mute  [N] music  [P] pause";
+const textsFor = (game, time, options) => {
+  const ctx = strictContext();
+  drawScene(ctx, game, time, options);
+  return ctx.texts;
+};
+function crashedGame({ newBest = false } = {}) {
   const game = createGame({ rng: createRng(1) });
-  const musicOff = strictContext();
-  drawScene(musicOff, game, 0, { musicOn: false });
-  assert.ok(musicOff.texts.includes("Music off (N)"));
-  const muted = strictContext();
-  drawScene(muted, game, 0, { muted: true, musicOn: false });
-  assert.ok(muted.texts.includes("Sound off (M)"));
-  assert.ok(!muted.texts.includes("Music off (N)"));
-  const allOn = strictContext();
-  drawScene(allOn, game, 0, { musicOn: true });
-  assert.ok(!allOn.texts.some((s) => /off \(/.test(s)));
+  press(game);
+  while (game.phase !== "over") step(game, 1 / 120);
+  game.crashedInto = OBSTACLE_TYPES.find((t) => t.id === "star");
+  game.newHighScore = newBest;
+  return game;
+}
+
+test("the status line always shows sound and music, with their keys", () => {
+  const game = createGame({ rng: createRng(1) });
+  assert.ok(textsFor(game, 0, { musicOn: true }).includes(`SOUND ON · MUSIC ON   ${KEYS_HINT}`));
+  assert.ok(textsFor(game, 0, { musicOn: false }).includes(`SOUND ON · MUSIC OFF   ${KEYS_HINT}`));
+  assert.ok(textsFor(game, 0, { muted: true, musicOn: true }).includes(`SOUND OFF   ${KEYS_HINT}`));
+});
+
+test("the title screen matches Runny Hound 1", () => {
+  const game = createGame({ rng: createRng(1) });
+  const texts = textsFor(game, 0);
+  assert.ok(texts.includes("RUNNY HOUND"));
+  assert.ok(texts.includes("A Greyhound’s dash through Bethlehem, PA — the Christmas City"));
+  assert.ok(texts.includes("PRESS SPACE OR TAP TO RUN"));
+  assert.ok(
+    texts.some((s) => s.startsWith("SPACE / ↑ jump (hold for higher)") && s.includes("H help")),
+  );
+  assert.ok(!textsFor(game, 0.5).includes("PRESS SPACE OR TAP TO RUN"), "the prompt blinks");
+});
+
+test("the game-over screen says RUFF LANDING!, what you hit, the fact and the scores", () => {
+  const game = crashedGame({ newBest: true });
+  game.overTime = 1;
+  const texts = textsFor(game, 0);
+  assert.ok(texts.includes("RUFF LANDING!"));
+  assert.ok(texts.includes("Your Greyhound tripped over a Moravian Star."));
+  assert.ok(texts.join(" ").includes(game.crashedInto.fact));
+  const scores = texts.find((s) => s.startsWith("SCORE "));
+  assert.ok(scores && scores.includes("BEST ") && scores.includes("★ NEW!"), scores);
+  assert.ok(texts.includes("PRESS SPACE OR TAP TO RUN AGAIN"));
+});
+
+test("the game-over screen only says NEW! for a new best, and waits before offering a restart", () => {
+  const game = crashedGame({ newBest: false });
+  game.overTime = 0.1;
+  const texts = textsFor(game, 0);
+  assert.ok(!texts.some((s) => s.includes("NEW!")));
+  assert.ok(!texts.includes("PRESS SPACE OR TAP TO RUN AGAIN"));
+});
+
+test("the paused screen tells players how to resume", () => {
+  const game = createGame({ rng: createRng(1) });
+  press(game);
+  game.paused = true;
+  const texts = textsFor(game, 0);
+  assert.ok(texts.includes("PAUSED"));
+  assert.ok(texts.includes("Press P, SPACE or tap to resume"));
+});
+
+test("the score blinks at a milestone, showing the round hundred", () => {
+  const game = createGame({ rng: createRng(1) });
+  press(game);
+  game.score = 213;
+  game.flash = 1.0; // blink off
+  assert.ok(!textsFor(game, 0).some((s) => s === "00213" || s === "00200"));
+  game.flash = 0.9; // blink on
+  assert.ok(textsFor(game, 0).includes("00200"));
+  game.flash = 0;
+  assert.ok(textsFor(game, 0).includes("00213"));
 });

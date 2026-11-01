@@ -1,9 +1,11 @@
 // Connects the game to the browser: drawing loop, keyboard/touch, sound, saving.
-import { drawScene } from "./art.js";
+import { drawMoravianStar, drawScene, OBSTACLE_ART } from "./art.js";
 import { createAudio } from "./audio.js";
 import { WORLD } from "./config.js";
 import { createGame, press, release, step, togglePause } from "./game.js";
 import { HELP_SECTIONS } from "./help.js";
+import { OBSTACLE_TYPES } from "./obstacles.js";
+import { PALETTE } from "./palette.js";
 import { actionForKey } from "./input.js";
 import { shouldPlayMusic } from "./music.js";
 import { createStore } from "./storage.js";
@@ -34,7 +36,7 @@ function handle(events) {
     }
     if (event === "crash") {
       store.setHighScore(game.highScore);
-      status.textContent = `You tripped over a ${game.crashedInto.name.toLowerCase()}. Score ${game.score}. Best ${game.highScore}. Press Space to run again.`;
+      status.textContent = `Your Greyhound tripped over ${game.crashedInto.phrase}. Score ${game.score}. Best ${game.highScore}. Press Space to run again.`;
     }
   }
 }
@@ -71,7 +73,6 @@ function openHelp() {
 dialog.addEventListener("close", () => {
   if (pausedByHelp) setPaused(false);
   pausedByHelp = false;
-  canvas.focus();
 });
 document.getElementById("help-button").addEventListener("click", openHelp);
 
@@ -106,17 +107,72 @@ document.addEventListener("keyup", (event) => {
 // ----- Touch and mouse -----
 canvas.addEventListener("pointerdown", (event) => {
   event.preventDefault();
-  canvas.focus();
   jump();
 });
 for (const type of ["pointerup", "pointercancel", "pointerleave"]) {
   canvas.addEventListener(type, () => release(game));
 }
 
-// Pause when the player switches tabs.
+// ----- On-screen Jump button (touch screens) -----
+const jumpButton = document.getElementById("jump-btn");
+jumpButton.addEventListener("pointerdown", (event) => {
+  event.preventDefault();
+  jump();
+});
+for (const type of ["pointerup", "pointercancel", "pointerleave"]) {
+  jumpButton.addEventListener(type, () => release(game));
+}
+
+// Pause when the player switches tabs or windows.
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) setPaused(true);
 });
+globalThis.addEventListener("blur", () => setPaused(true));
+
+// ----- Page decorations, all drawn in code: header star, tab icon, obstacle cards -----
+function sharpCanvas(canvas, width, height) {
+  const ratio = Math.min(2, globalThis.devicePixelRatio || 1);
+  canvas.width = width * ratio;
+  canvas.height = height * ratio;
+  const context = canvas.getContext("2d");
+  context.scale(ratio, ratio);
+  return context;
+}
+
+drawMoravianStar(sharpCanvas(document.getElementById("brand-star"), 56, 56), 28, 28, 25, {
+  points: 8,
+});
+
+const icon = document.createElement("canvas");
+const iconContext = sharpCanvas(icon, 64, 64);
+iconContext.fillStyle = PALETTE.moravianBlue;
+iconContext.beginPath();
+iconContext.roundRect(0, 0, 64, 64, 14);
+iconContext.fill();
+drawMoravianStar(iconContext, 32, 32, 27, { points: 8 });
+document.querySelector('link[rel="icon"]').href = icon.toDataURL("image/png");
+
+const cards = document.getElementById("obstacle-cards");
+for (const type of OBSTACLE_TYPES) {
+  const figure = document.createElement("figure");
+  const thumb = document.createElement("canvas");
+  const context = sharpCanvas(thumb, 96, 80);
+  const ground = 70;
+  context.fillStyle = "rgba(0, 43, 92, 0.12)";
+  context.fillRect(0, ground, 96, 80 - ground);
+  const scale = Math.min(1, 84 / type.width, 62 / type.height);
+  context.translate(48, ground);
+  context.scale(scale, scale);
+  OBSTACLE_ART[type.id](context, -type.width / 2, 0, type.width, type.height, 0.4);
+  const caption = document.createElement("figcaption");
+  const name = document.createElement("strong");
+  name.textContent = type.name;
+  const fact = document.createElement("span");
+  fact.textContent = type.fact;
+  caption.append(name, fact);
+  figure.append(thumb, caption);
+  cards.append(figure);
+}
 
 // ----- Sharp drawing on high-resolution screens -----
 function fitCanvas() {
@@ -145,4 +201,3 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
-canvas.focus();

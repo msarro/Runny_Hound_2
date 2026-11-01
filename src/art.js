@@ -31,7 +31,13 @@ export function wrapText(measure, text, maxWidth) {
 }
 
 // A Moravian Star seen face-on: many points, each split light/dark so it looks 3D.
-export function drawMoravianStar(ctx, cx, cy, radius, { points = 12, glow = 0 } = {}) {
+export function drawMoravianStar(
+  ctx,
+  cx,
+  cy,
+  radius,
+  { points = 12, glow = 0, rotation = 0 } = {},
+) {
   if (glow > 0) {
     const g = ctx.createRadialGradient(cx, cy, radius * 0.3, cx, cy, radius * (1.6 + glow));
     g.addColorStop(0, "rgba(242, 199, 92, 0.55)");
@@ -43,7 +49,7 @@ export function drawMoravianStar(ctx, cx, cy, radius, { points = 12, glow = 0 } 
   }
   const inner = radius * 0.38;
   for (let i = 0; i < points; i++) {
-    const a = (i / points) * TAU - Math.PI / 2;
+    const a = (i / points) * TAU - Math.PI / 2 + rotation;
     const left = a - Math.PI / points;
     const right = a + Math.PI / points;
     const tipX = cx + Math.cos(a) * radius;
@@ -540,71 +546,138 @@ function drawHound(ctx, game, time) {
   ctx.restore();
 }
 
-// ---------- Text ----------
+// ---------- Text (matches Runny Hound 1) ----------
 
 const pad = (n) => String(n).padStart(5, "0");
+const MONO = 'ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+const SERIF = 'Georgia, "Times New Roman", serif';
+const blinkOn = (time) => Math.floor(time * 2) % 2 === 0;
 
 function drawHud(ctx, game, muted, musicOn) {
-  ctx.font = "bold 18px ui-monospace, Menlo, Consolas, monospace";
-  ctx.textAlign = "right";
   ctx.textBaseline = "top";
-  ctx.fillStyle = C.greyhoundGrey;
-  ctx.fillText(`HI ${pad(game.highScore)}`, W - 110, 14);
-  ctx.fillStyle = C.starGold;
-  ctx.fillText(pad(game.score), W - 18, 14);
-  const notice = muted ? "Sound off (M)" : musicOn ? null : "Music off (N)";
-  if (notice) {
-    ctx.textAlign = "left";
-    ctx.font = "14px system-ui, sans-serif";
-    ctx.fillStyle = C.greyhoundGrey;
-    ctx.fillText(notice, 18, 16);
+  ctx.textAlign = "right";
+  ctx.font = `bold 18px ${MONO}`;
+  const flashing = game.flash > 0;
+  const hidden = flashing && Math.floor(game.flash * 8) % 2 === 0;
+  const scoreText = pad(flashing ? Math.floor(game.score / 100) * 100 : game.score);
+  const hiX = W - 16 - ctx.measureText(scoreText).width - 22;
+  ctx.fillStyle = "rgba(0, 20, 50, 0.55)";
+  ctx.fillText(`HI ${pad(game.highScore)}`, hiX + 1, 15);
+  ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+  ctx.fillText(`HI ${pad(game.highScore)}`, hiX, 14);
+  if (!hidden) {
+    ctx.fillStyle = "rgba(0, 20, 50, 0.55)";
+    ctx.fillText(scoreText, W - 15, 15);
+    ctx.fillStyle = flashing ? C.goldLight : C.white;
+    ctx.fillText(scoreText, W - 16, 14);
+  }
+
+  const sound = muted ? "SOUND OFF" : musicOn ? "SOUND ON · MUSIC ON" : "SOUND ON · MUSIC OFF";
+  ctx.textAlign = "left";
+  ctx.font = `11px ${MONO}`;
+  ctx.fillStyle = "rgba(255, 255, 255, 0.75)";
+  ctx.fillText(`${sound}   [M] mute  [N] music  [P] pause`, 14, 14);
+}
+
+function panel(ctx, x, y, w, h) {
+  ctx.save();
+  ctx.shadowColor = "rgba(0, 0, 0, 0.35)";
+  ctx.shadowBlur = 18;
+  ctx.fillStyle = "rgba(0, 33, 77, 0.86)";
+  ctx.beginPath();
+  ctx.roundRect(x, y, w, h, 12);
+  ctx.fill();
+  ctx.restore();
+  ctx.strokeStyle = C.starGold;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect(x + 4, y + 4, w - 8, h - 8, 9);
+  ctx.stroke();
+}
+
+function drawTitle(ctx, time) {
+  const x = 270;
+  const y = 34;
+  const w = 610;
+  const h = 196;
+  const cx = x + w / 2;
+  panel(ctx, x, y, w, h);
+  drawMoravianStar(ctx, x + 52, y + 56, 24, { points: 8, glow: 0.2, rotation: time * 0.6 });
+  drawMoravianStar(ctx, x + w - 52, y + 56, 24, { points: 8, glow: 0.2, rotation: -time * 0.6 });
+  ctx.textAlign = "center";
+  ctx.textBaseline = "alphabetic";
+  ctx.font = `bold 46px ${SERIF}`;
+  ctx.fillStyle = C.white;
+  ctx.fillText("RUNNY HOUND", cx, y + 72);
+  ctx.font = `italic 15px ${SERIF}`;
+  ctx.fillStyle = C.greyLight;
+  ctx.fillText("A Greyhound’s dash through Bethlehem, PA — the Christmas City", cx, y + 100);
+  if (blinkOn(time)) {
+    ctx.font = `bold 18px ${MONO}`;
+    ctx.fillStyle = C.goldLight;
+    ctx.fillText("PRESS SPACE OR TAP TO RUN", cx, y + 140);
+  }
+  ctx.font = `12px ${MONO}`;
+  ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+  ctx.fillText(
+    "SPACE / ↑ jump (hold for higher)   M mute   N music   P pause   H help",
+    cx,
+    y + 172,
+  );
+}
+
+function drawGameOver(ctx, game, time) {
+  const x = 250;
+  const y = 30;
+  const w = 640;
+  const h = 206;
+  const cx = x + w / 2;
+  panel(ctx, x, y, w, h);
+  ctx.textAlign = "center";
+  ctx.textBaseline = "alphabetic";
+  ctx.font = `bold 34px ${SERIF}`;
+  ctx.fillStyle = C.white;
+  ctx.fillText("RUFF LANDING!", cx, y + 50);
+  ctx.font = `15px ${SERIF}`;
+  ctx.fillStyle = C.goldLight;
+  ctx.fillText(`Your Greyhound tripped over ${game.crashedInto.phrase}.`, cx, y + 78);
+  ctx.font = `italic 13.5px ${SERIF}`;
+  ctx.fillStyle = C.greyLight;
+  const lines = wrapText((s) => ctx.measureText(s).width, game.crashedInto.fact, w - 90);
+  lines.forEach((line, i) => ctx.fillText(line, cx, y + 104 + i * 19));
+  const after = y + 104 + lines.length * 19;
+  ctx.font = `bold 17px ${MONO}`;
+  ctx.fillStyle = C.white;
+  const best = game.newHighScore ? "  ★ NEW!" : "";
+  ctx.fillText(
+    `SCORE ${pad(game.score)}    BEST ${pad(game.highScore)}${best}`,
+    cx,
+    Math.max(after + 8, y + 160),
+  );
+  if (game.overTime >= RESTART_DELAY && blinkOn(time)) {
+    ctx.font = `bold 14px ${MONO}`;
+    ctx.fillStyle = C.goldLight;
+    ctx.fillText("PRESS SPACE OR TAP TO RUN AGAIN", cx, y + h - 18);
   }
 }
 
-function panel(ctx, lines, { title, footer }) {
-  ctx.font = "16px system-ui, sans-serif";
-  const body = lines.flatMap((l) => wrapText((s) => ctx.measureText(s).width, l, 460));
-  const height = 64 + body.length * 22 + (footer ? 30 : 0);
-  const top = (GROUND - height) / 2 + 10;
-  ctx.fillStyle = "rgba(10, 34, 64, 0.88)";
-  ctx.strokeStyle = C.starGold;
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.roundRect(W / 2 - 260, top, 520, height, 10);
-  ctx.fill();
-  ctx.stroke();
-
+function drawPaused(ctx) {
+  ctx.fillStyle = "rgba(0, 20, 50, 0.45)";
+  ctx.fillRect(0, 0, W, H);
   ctx.textAlign = "center";
-  ctx.textBaseline = "top";
-  ctx.fillStyle = C.starGold;
-  ctx.font = "bold 26px system-ui, sans-serif";
-  ctx.fillText(title, W / 2, top + 16);
-  ctx.fillStyle = C.snow;
-  ctx.font = "16px system-ui, sans-serif";
-  body.forEach((line, i) => ctx.fillText(line, W / 2, top + 54 + i * 22));
-  if (footer) {
-    ctx.fillStyle = C.starGold;
-    ctx.font = "bold 16px system-ui, sans-serif";
-    ctx.fillText(footer, W / 2, top + height - 32);
-  }
+  ctx.textBaseline = "middle";
+  ctx.font = `bold 30px ${SERIF}`;
+  ctx.fillStyle = C.white;
+  ctx.fillText("PAUSED", W / 2, H / 2 - 14);
+  ctx.font = `14px ${MONO}`;
+  ctx.fillStyle = C.goldLight;
+  ctx.fillText("Press P, SPACE or tap to resume", W / 2, H / 2 + 18);
 }
 
 function drawOverlay(ctx, game, time) {
-  if (game.phase === "ready") {
-    panel(ctx, ["Help the Moravian Greyhound race through Bethlehem, PA."], {
-      title: "Runny Hound",
-      footer: "Press Space or tap to run",
-    });
-  } else if (game.paused) {
-    panel(ctx, ["Take a breather."], { title: "Paused", footer: "Press P to keep running" });
-  } else if (game.phase === "over") {
-    const type = game.crashedInto;
-    const blink = game.overTime >= RESTART_DELAY && Math.sin(time * 5) > -0.6;
-    panel(ctx, [`Fun fact: ${type.fact}`], {
-      title: `You tripped over a ${type.name.toLowerCase()}!`,
-      footer: blink ? "Press Space to run again" : " ",
-    });
-  }
+  if (game.phase === "ready") drawTitle(ctx, time);
+  else if (game.phase === "over") drawGameOver(ctx, game, time);
+  else if (game.paused) drawPaused(ctx);
 }
 
 // ---------- Whole frame ----------

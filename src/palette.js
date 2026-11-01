@@ -1,11 +1,15 @@
-// Moravian-inspired colors. The first four match the CSS variables in style.css
-// (a test checks this). They are approximations; check them against the official
-// Moravian University brand guide before any public release.
+// Moravian-inspired colors, the same as Runny Hound 1's. The first four match the CSS
+// variables in style.css (a test checks this). They are approximations; check them
+// against the official Moravian University brand guide before any public release.
 export const PALETTE = {
-  moravianBlue: "#0a2240",
-  greyhoundGrey: "#a2aaad",
-  starGold: "#f2c75c",
+  moravianBlue: "#002b5c",
+  greyhoundGrey: "#a9b0b7",
+  starGold: "#f4b223",
   snow: "#f7f7f2",
+
+  white: "#ffffff",
+  greyLight: "#d6dadf",
+  goldLight: "#ffe29a",
 
   nightTop: "#050f1f",
   skyHorizon: "#2a4d7a",

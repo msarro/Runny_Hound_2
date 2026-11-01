@@ -17,3 +17,14 @@ test("the page and the game use the same Moravian colors", () => {
   assert.equal(cssVar("star-gold"), PALETTE.starGold);
   assert.equal(cssVar("snow"), PALETTE.snow);
 });
+
+test("the colors match Runny Hound 1", () => {
+  assert.equal(PALETTE.moravianBlue, "#002b5c");
+  assert.equal(PALETTE.coatBlue, "#1d4f91");
+  assert.equal(PALETTE.greyhoundGrey, "#a9b0b7");
+  assert.equal(PALETTE.starGold, "#f4b223");
+  const css = readFileSync(new URL("../src/style.css", import.meta.url), "utf8");
+  assert.match(css, /--page:\s*#e9ecef/);
+  assert.match(css, /--ink:\s*#1b2430/);
+  assert.match(css, /--coat-blue:\s*#1d4f91/);
+});

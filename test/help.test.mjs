@@ -18,7 +18,7 @@ test("help tells players that Space makes the greyhound jump", () => {
 });
 
 test("help lists every control", () => {
-  for (const control of ["Space", "Hold", "M:", "N:", "P:", "H:", "Tap"])
+  for (const control of ["Space", "Hold", "M:", "N:", "P:", "H:", "Tap", "Esc"])
     assert.ok(text.includes(control), control);
 });
 

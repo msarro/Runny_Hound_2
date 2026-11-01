@@ -1,86 +1,221 @@
-/* Moravian-inspired palette. The first four values must match src/palette.js (a test
-   checks this). They are approximations; check them against the official Moravian
-   University brand guide before any public release. */
+/* The page matches Runny Hound 1. The color variables used by the game must match
+   src/palette.js (a test checks this). They are approximations; check them against the
+   official Moravian University brand guide before any public release. */
 :root {
-  --moravian-blue: #0a2240;
-  --greyhound-grey: #a2aaad;
-  --star-gold: #f2c75c;
+  --moravian-blue: #002b5c;
+  --coat-blue: #1d4f91;
+  --greyhound-grey: #a9b0b7;
+  --star-gold: #f4b223;
   --snow: #f7f7f2;
+  --page: #e9ecef;
+  --ink: #1b2430;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html,
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
-  background: var(--moravian-blue);
-  color: var(--snow);
+  background: var(--page);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
 }
 
-header {
+.brand-bar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 0.75rem 1rem;
+  gap: 14px;
+  padding: 14px max(16px, calc((100vw - 960px) / 2));
+  background: var(--moravian-blue);
+  color: #fff;
+  border-bottom: 4px solid var(--star-gold);
 }
 
-h1 {
+.brand-bar h1 {
   margin: 0;
-  color: var(--star-gold);
-  letter-spacing: 0.03em;
+  font-size: 1.7rem;
+  letter-spacing: 0.04em;
 }
 
-button {
-  font: inherit;
+.brand-bar p {
+  margin: 2px 0 0;
+  color: #c9d3e3;
+  font-style: italic;
+}
+
+.brand-star {
+  width: 56px;
+  height: 56px;
+  flex: none;
+}
+
+#help-button {
+  margin-left: auto;
+  flex: none;
   padding: 0.4rem 1rem;
-  border: 2px solid var(--star-gold);
-  border-radius: 0.4rem;
+  font:
+    bold 0.95rem ui-monospace,
+    Menlo,
+    monospace;
+  color: #fff;
   background: transparent;
-  color: var(--star-gold);
+  border: 2px solid var(--star-gold);
+  border-radius: 8px;
   cursor: pointer;
 }
 
-button:hover,
-button:focus-visible {
+#help-button:hover,
+#help-button:focus-visible {
   background: var(--star-gold);
   color: var(--moravian-blue);
 }
 
 main {
-  display: grid;
-  justify-items: center;
-  gap: 0.5rem;
-  padding: 0 1rem 1rem;
+  max-width: 992px;
+  margin: 0 auto;
+  padding: 18px 16px 8px;
 }
 
-canvas {
+.stage {
+  position: relative;
+}
+
+#game {
+  display: block;
   width: 100%;
-  max-width: 960px;
   aspect-ratio: 3 / 1;
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0, 43, 92, 0.3);
+  background: #03112e;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+#game:focus-visible {
+  outline: 3px solid var(--star-gold);
+  outline-offset: 3px;
+}
+
+.touch-controls {
+  display: none;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.touch-controls button {
+  flex: 1;
+  padding: 16px;
+  font:
+    bold 1.1rem ui-monospace,
+    Menlo,
+    monospace;
+  color: #fff;
+  background: var(--coat-blue);
   border: 2px solid var(--star-gold);
-  border-radius: 0.5rem;
+  border-radius: 10px;
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
 }
 
-canvas:focus-visible {
-  outline: 3px solid var(--snow);
-  outline-offset: 3px;
+.touch-controls button:active {
+  background: var(--moravian-blue);
 }
 
-.hint {
+@media (pointer: coarse) {
+  .touch-controls {
+    display: flex;
+  }
+}
+
+h2 {
+  color: var(--moravian-blue);
+  font-size: 1.2rem;
+  margin: 22px 0 8px;
+  border-bottom: 2px solid var(--star-gold);
+  display: inline-block;
+}
+
+.how ul {
   margin: 0;
-  color: var(--greyhound-grey);
+  padding-left: 20px;
+  line-height: 1.7;
+}
+
+kbd {
+  font:
+    0.85em ui-monospace,
+    Menlo,
+    monospace;
+  background: #fff;
+  border: 1px solid var(--greyhound-grey);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 12px;
+}
+
+.cards figure {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 0;
+  padding: 10px;
+  background: #fff;
+  border-radius: 10px;
+  border-left: 4px solid var(--coat-blue);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.cards canvas {
+  width: 96px;
+  height: 80px;
+  flex: none;
+  border-radius: 6px;
+  background: linear-gradient(#dcebf6, #f4f7fa);
+}
+
+.cards figcaption {
   font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.cards strong {
+  display: block;
+  color: var(--moravian-blue);
+  margin-bottom: 2px;
+}
+
+footer {
+  max-width: 960px;
+  margin: 18px auto 30px;
+  padding: 0 16px;
+  font-size: 0.85rem;
+  color: #5e6a75;
+  text-align: center;
+}
+
+footer a {
+  color: var(--coat-blue);
 }
 
 dialog {
   max-width: 36rem;
   border: 2px solid var(--star-gold);
-  border-radius: 0.5rem;
+  border-radius: 10px;
   background: var(--moravian-blue);
-  color: var(--snow);
+  color: #fff;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 dialog::backdrop {
@@ -90,6 +225,20 @@ dialog::backdrop {
 dialog h2,
 dialog h3 {
   color: var(--star-gold);
+  border: 0;
+}
+
+dialog button {
+  font:
+    bold 0.95rem ui-monospace,
+    Menlo,
+    monospace;
+  padding: 0.4rem 1rem;
+  color: var(--moravian-blue);
+  background: var(--star-gold);
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .visually-hidden {
