@@ -34,6 +34,7 @@ export const HELP_SECTIONS = [
       "Music: In dulci jubilo (Good Christian Men, Rejoice), a carol sung at Moravian Christmas Eve vespers, in J. S. Bach's four-part harmonization (BWV 368), played like a Moravian trombone choir.",
       "Bethlehem's Bach Choir has sung Bach's music since 1898, and Moravian trombone choirs have played chorales in Bethlehem since the 1750s.",
       "A fan-made demo inspired by Moravian University. Not an official university product.",
+      "Runny Hound © 2026 Matty Sarro, licensed under CC BY-NC-ND 4.0: share it unchanged, non-commercially, with credit. Details: creativecommons.org/licenses/by-nc-nd/4.0",
     ],
   },
 ];

@@ -23,7 +23,14 @@
           "value": "true"
         }
       ],
-      "externalReferences": []
+      "externalReferences": [],
+      "licenses": [
+        {
+          "license": {
+            "id": "CC-BY-NC-ND-4.0"
+          }
+        }
+      ]
     }
   },
   "components": [
