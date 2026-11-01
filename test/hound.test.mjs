@@ -1,6 +1,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createHound, startJump, releaseJump, updateHound, houndHitbox } from "../src/hound.js";
+import {
+  createHound,
+  startJump,
+  releaseJump,
+  updateHound,
+  houndHitbox,
+  setDucking,
+} from "../src/hound.js";
 import { WORLD } from "../src/config.js";
 
 const DT = 1 / 120;
@@ -74,4 +81,38 @@ test("the hitbox rises with the hound and rests on the ground", () => {
   startJump(hound);
   updateHound(hound, 0.1);
   assert.ok(houndHitbox(hound).y < standing.y);
+});
+
+test("ducking on the ground lowers the hitbox but keeps the paws on the ground", () => {
+  const hound = createHound();
+  const standing = houndHitbox(hound);
+  setDucking(hound, true);
+  const ducked = houndHitbox(hound);
+  assert.ok(ducked.height <= standing.height * 0.6, `ducked height ${ducked.height}`);
+  assert.equal(ducked.y + ducked.height, standing.y + standing.height);
+  setDucking(hound, false);
+  assert.deepEqual(houndHitbox(hound), standing);
+});
+
+test("holding duck in the air drops the hound faster", () => {
+  const land = (duckAt) => {
+    const hound = createHound();
+    startJump(hound);
+    let t = 0;
+    while (!hound.grounded) {
+      if (t >= duckAt) setDucking(hound, true);
+      updateHound(hound, DT);
+      t += DT;
+    }
+    return t;
+  };
+  assert.ok(land(0.3) < land(Infinity) - 0.1);
+});
+
+test("updateHound says when the hound lands", () => {
+  const hound = createHound();
+  startJump(hound);
+  let landings = 0;
+  for (let i = 0; i < 240; i++) if (updateHound(hound, DT)) landings++;
+  assert.equal(landings, 1);
 });

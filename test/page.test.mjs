@@ -18,8 +18,9 @@ test("the header has the Moravian Star emblem, the name and the tagline", () => 
   assert.ok(html.includes("Go, Greyhounds! Leap through Bethlehem, the Christmas City."));
 });
 
-test("touch screens get a Jump button", () => {
+test("touch screens get Duck and Jump buttons", () => {
   assert.match(html, /class="touch-controls"/);
+  assert.match(html, /<button[^>]*id="duck-btn"[^>]*>▼ Duck<\/button>/);
   assert.match(html, /<button[^>]*id="jump-btn"[^>]*>▲ Jump<\/button>/);
 });
 

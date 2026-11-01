@@ -5,8 +5,9 @@ Greyhound runs through Bethlehem, PA, jumping over obstacles from campus and the
 Christmas City when you press **Space**. Every graphic and sound is generated in code;
 there are no image or audio files.
 
-Jump over a lovefeast candle, a stack of books, a Moravian Star, Bethlehem Steel beams
-and a Christmas tree, under South Mountain's star. Hit one and you get a fun fact
+Jump over lovefeast candles, marshmallow chicks, a stack of books, a Moravian Star,
+Bethlehem Steel beams and a Christmas tree, and duck under flying Moravian Stars, all
+under South Mountain's star. Hit one and you get a fun fact
 about it. The music is _In dulci jubilo_ ("Good Christian Men, Rejoice") in J. S. Bach's
 harmonization (BWV 368), played like a Moravian trombone choir. How it is built:
 [docs/architecture.md](docs/architecture.md).
@@ -14,12 +15,13 @@ harmonization (BWV 368), played like a Moravian trombone choir. How it is built:
 | Control                   | Action                                                        |
 | ------------------------- | ------------------------------------------------------------- |
 | `Space` / `↑` / `W` / tap | Jump (hold for higher, tap for a hop); start, restart, resume |
+| `↓` / `S`                 | Duck under flying stars; in the air, drop faster              |
 | `M`                       | All sound on/off (remembered)                                 |
 | `N`                       | Music on/off (remembered)                                     |
 | `P` / `Esc`               | Pause                                                         |
 | `H`                       | Help (pauses the game)                                        |
 
-On phones and tablets a **▲ Jump** button appears under the game. The page and screens
+On phones and tablets **▼ Duck** and **▲ Jump** buttons appear under the game. The page and screens
 match Runny Hound 1 ([decision 0006](docs/decisions/0006-parity-with-runny-hound-1.md)).
 
 ## Play it on your computer
