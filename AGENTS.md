@@ -30,9 +30,14 @@ university-themed obstacles, in Moravian-inspired colors. See
   level, no adding licenses to the allowed list without a decision record.
 - **No passwords, keys or tokens in code**, config or docs. Use environment variables
   or a secrets store. If one leaks, treat it as compromised and tell the owner.
-- **Licenses:** usage is _shared outside the organization_, so commercial use is assumed.
-  Only licenses in `license-policy.json` are allowed
+- **Dependency licenses:** usage is _shared outside the organization_, so commercial
+  use is assumed. Only licenses in `license-policy.json` are allowed
   ([decision 0001](docs/decisions/0001-usage-and-license-policy.md)).
+- **Project license:** CC BY-NC-ND 4.0, © Matty Sarro
+  ([decision 0005](docs/decisions/0005-project-license.md)). `LICENSE` is the official
+  legal code; never edit it. `LICENSE`, `package.json`, the SBOM, the README and player
+  help must agree (`test/project-license.test.mjs`). The project's own license never
+  relaxes the dependency policy.
 - **Dependencies:** pin exact versions, commit `package-lock.json`, and regenerate
   `sbom.cdx.json` (`npm run sbom`) in the same commit.
 - **Run code only from this folder, against its own environment.** Use absolute paths

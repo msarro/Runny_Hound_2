@@ -56,16 +56,31 @@ The full rules, for people and AI assistants alike, are in [AGENTS.md](AGENTS.md
 | `npm run sbom:check`   | `sbom.cdx.json` lists exactly the current dependencies.                  |
 | `npm run check`        | All of the above.                                                        |
 
-## Usage and licensing
+## Usage and dependency licenses
 
 This software is **shared outside Moravian University**, so commercial use is assumed.
 Only permissive dependency licenses are allowed; the list is in
 [license-policy.json](license-policy.json) and the reasoning in
 [docs/decisions/0001](docs/decisions/0001-usage-and-license-policy.md).
 
-The project itself has no open-source license yet, so all rights are reserved by the
-owner. This is a fan-made demo, not an official Moravian University product. The art
-is original and uses no university logos.
+Dependencies are tools used to build and check the game; none ship to players.
+
+## License
+
+Runny Hound © 2026 Matty Sarro is licensed under
+[CC BY-NC-ND 4.0](LICENSE) (Creative Commons Attribution-NonCommercial-NoDerivatives
+4.0 International). In short: you may share the game unchanged, for non-commercial
+purposes, with credit to the author. You may not share modified versions. The full
+legal code is in [LICENSE](LICENSE); see
+[decision 0005](docs/decisions/0005-project-license.md).
+
+What the license does **not** cover:
+
+- **Public domain music.** _In dulci jubilo_ and J. S. Bach's harmonization (BWV 368)
+  are in the public domain and stay free for anyone to use.
+- **Moravian University names and symbols.** The license grants no trademark rights.
+  This is a fan-made demo, not an official Moravian University product, and it uses no
+  university logos.
 
 ## Documentation
 

@@ -31,8 +31,9 @@ The license check (`npm run licenses`) runs on every push and pull request. A te
 - MPL-2.0 does permit commercial use, but it adds sharing obligations, so it is
   excluded. That is why the project uses Node's built-in test runner instead of
   Vitest, which pulls in MPL-2.0 packages (see [0003](0003-tooling.md)).
-- The project itself has no open-source license; all rights are reserved by the owner
-  until they decide otherwise.
+- The project itself had no license at first. **Updated by
+  [0005](0005-project-license.md):** it is now licensed under CC BY-NC-ND 4.0. That
+  does not change the dependency policy above.
 - Moravian University names, colors and symbols (such as the Moravian Star) are used
   as inspiration for original art. Official logos are not used. Get university
   approval before any official or public-facing release.
