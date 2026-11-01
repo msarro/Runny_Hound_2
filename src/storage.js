@@ -2,6 +2,7 @@
 // (blocked cookies, private browsing) just means nothing is remembered.
 const HIGH_SCORE_KEY = "runny-hound:highScore";
 const MUTED_KEY = "runny-hound:muted";
+const MUSIC_KEY = "runny-hound:music";
 
 export function createStore(storage) {
   const read = (key) => {
@@ -32,6 +33,12 @@ export function createStore(storage) {
     },
     setMuted(muted) {
       write(MUTED_KEY, muted ? "true" : "false");
+    },
+    getMusicOn() {
+      return read(MUSIC_KEY) !== "false";
+    },
+    setMusicOn(on) {
+      write(MUSIC_KEY, on ? "true" : "false");
     },
   };
 }

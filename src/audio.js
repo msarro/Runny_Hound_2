@@ -1,7 +1,12 @@
 // All sounds are synthesized with the Web Audio API; there are no sound files.
+// Background music lives in src/music.js; this file owns the shared audio context.
 // The audio context is created on first use, after the player presses a key, because
 // browsers block sound until then.
 
+import { createMusicPlayer } from "./music.js";
+import { IN_DULCI_JUBILO } from "./score.js";
+
+const MUSIC_VOLUME = 0.5;
 const SILENT = 0.0001; // exponential ramps can't reach 0
 
 function tone(ctx, out, { type, from, to = from, start = 0, length, volume }) {
@@ -68,6 +73,7 @@ export function createAudio(makeContext) {
   let ctx;
   let output;
   let triedToCreate = false;
+  let music;
 
   const ready = () => {
     if (!triedToCreate) {
@@ -78,6 +84,10 @@ export function createAudio(makeContext) {
           output = ctx.createGain();
           output.gain.setValueAtTime(0.8, ctx.currentTime);
           output.connect(ctx.destination);
+          const musicBus = ctx.createGain();
+          musicBus.gain.setValueAtTime(MUSIC_VOLUME, ctx.currentTime);
+          musicBus.connect(output);
+          music = createMusicPlayer(ctx, musicBus, IN_DULCI_JUBILO);
         }
       } catch {
         ctx = undefined;
@@ -89,8 +99,25 @@ export function createAudio(makeContext) {
 
   const audio = {
     muted: false,
+    musicOn: true,
     setMuted(muted) {
       audio.muted = muted;
+    },
+    setMusicOn(on) {
+      audio.musicOn = on;
+    },
+    // Call every frame with whether music should be heard right now.
+    syncMusic(shouldPlay) {
+      if (shouldPlay) {
+        if (!ready()) return;
+        music.play();
+        music.pump();
+      } else {
+        music?.stop();
+      }
+    },
+    rewindMusic() {
+      music?.rewind();
     },
     unlock() {
       ready();

@@ -544,7 +544,7 @@ function drawHound(ctx, game, time) {
 
 const pad = (n) => String(n).padStart(5, "0");
 
-function drawHud(ctx, game, muted) {
+function drawHud(ctx, game, muted, musicOn) {
   ctx.font = "bold 18px ui-monospace, Menlo, Consolas, monospace";
   ctx.textAlign = "right";
   ctx.textBaseline = "top";
@@ -552,11 +552,12 @@ function drawHud(ctx, game, muted) {
   ctx.fillText(`HI ${pad(game.highScore)}`, W - 110, 14);
   ctx.fillStyle = C.starGold;
   ctx.fillText(pad(game.score), W - 18, 14);
-  if (muted) {
+  const notice = muted ? "Sound off (M)" : musicOn ? null : "Music off (N)";
+  if (notice) {
     ctx.textAlign = "left";
     ctx.font = "14px system-ui, sans-serif";
     ctx.fillStyle = C.greyhoundGrey;
-    ctx.fillText("Sound off (M)", 18, 16);
+    ctx.fillText(notice, 18, 16);
   }
 }
 
@@ -608,7 +609,7 @@ function drawOverlay(ctx, game, time) {
 
 // ---------- Whole frame ----------
 
-export function drawScene(ctx, game, time, { muted = false } = {}) {
+export function drawScene(ctx, game, time, { muted = false, musicOn = true } = {}) {
   drawSky(ctx, time);
   drawMountain(ctx, game.distance, time);
   drawSkyline(ctx, game.distance, time);
@@ -616,6 +617,6 @@ export function drawScene(ctx, game, time, { muted = false } = {}) {
   drawObstacles(ctx, game, time);
   drawHound(ctx, game, time);
   drawSnow(ctx, game.distance, time);
-  drawHud(ctx, game, muted);
+  drawHud(ctx, game, muted, musicOn);
   drawOverlay(ctx, game, time);
 }

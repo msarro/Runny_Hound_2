@@ -5,6 +5,7 @@ import { WORLD } from "./config.js";
 import { createGame, press, release, step, togglePause } from "./game.js";
 import { HELP_SECTIONS } from "./help.js";
 import { actionForKey } from "./input.js";
+import { shouldPlayMusic } from "./music.js";
 import { createStore } from "./storage.js";
 
 const STEP = 1 / 120; // the game updates in fixed steps so it plays the same on any screen
@@ -20,13 +21,17 @@ const audio = createAudio(() => {
   return AudioContextClass ? new AudioContextClass() : null;
 });
 audio.setMuted(store.getMuted());
+audio.setMusicOn(store.getMusicOn());
 
 const game = createGame({ highScore: store.getHighScore() });
 
 function handle(events) {
   for (const event of events) {
     audio.play(event);
-    if (event === "start") status.textContent = "";
+    if (event === "start") {
+      status.textContent = "";
+      audio.rewindMusic();
+    }
     if (event === "crash") {
       store.setHighScore(game.highScore);
       status.textContent = `You tripped over a ${game.crashedInto.name.toLowerCase()}. Score ${game.score}. Best ${game.highScore}. Press Space to run again.`;
@@ -89,6 +94,10 @@ document.addEventListener("keydown", (event) => {
     audio.setMuted(!audio.muted);
     store.setMuted(audio.muted);
   }
+  if (action === "music") {
+    audio.setMusicOn(!audio.musicOn);
+    store.setMusicOn(audio.musicOn);
+  }
 });
 document.addEventListener("keyup", (event) => {
   if (actionForKey(event.code) === "jump") release(game);
@@ -131,7 +140,8 @@ function frame(now) {
     handle(step(game, STEP));
     carry -= STEP;
   }
-  drawScene(ctx, game, now / 1000, { muted: audio.muted });
+  audio.syncMusic(shouldPlayMusic(game, audio));
+  drawScene(ctx, game, now / 1000, { muted: audio.muted, musicOn: audio.musicOn });
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);

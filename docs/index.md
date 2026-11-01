@@ -13,6 +13,7 @@ wiki on every merge to `main`, and edits made directly on the wiki are overwritt
 - [0001: Usage and license policy](decisions/0001-usage-and-license-policy.md)
 - [0002: No sign-in, and the SSO rule if that changes](decisions/0002-no-sign-in.md)
 - [0003: Tooling choices](decisions/0003-tooling.md)
+- [0004: Background music](decisions/0004-background-music.md)
 
 ## Runbooks
 

@@ -7,12 +7,15 @@ there are no image or audio files.
 
 Jump over a lovefeast candle, a stack of books, a Moravian Star, Bethlehem Steel beams
 and a Christmas tree, under South Mountain's star. Hit one and you get a fun fact
-about it. How it is built: [docs/architecture.md](docs/architecture.md).
+about it. The music is _In dulci jubilo_ ("Good Christian Men, Rejoice") in J. S. Bach's
+harmonization (BWV 368), played like a Moravian trombone choir. How it is built:
+[docs/architecture.md](docs/architecture.md).
 
 | Control                   | Action                                                 |
 | ------------------------- | ------------------------------------------------------ |
 | `Space` / `↑` / `W` / tap | Jump (hold for higher, tap for a hop); start / restart |
-| `M`                       | Sound on/off (remembered)                              |
+| `M`                       | All sound on/off (remembered)                          |
+| `N`                       | Music on/off (remembered)                              |
 | `P`                       | Pause                                                  |
 | `H`                       | Help (pauses the game)                                 |
 

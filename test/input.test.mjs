@@ -12,6 +12,10 @@ test("M mutes, P pauses, H opens help", () => {
   assert.equal(actionForKey("KeyH"), "help");
 });
 
+test("N turns the music on or off", () => {
+  assert.equal(actionForKey("KeyN"), "music");
+});
+
 test("other keys do nothing", () => {
   for (const code of ["KeyQ", "Enter", "Tab", "", undefined])
     assert.equal(actionForKey(code), null);
