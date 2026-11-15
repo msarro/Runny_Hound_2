@@ -24,6 +24,16 @@ harmonization (BWV 368), played like a Moravian trombone choir. How it is built:
 On phones and tablets **▼ Duck** and **▲ Jump** buttons appear under the game. The page and screens
 match Runny Hound 1 ([decision 0006](docs/decisions/0006-parity-with-runny-hound-1.md)).
 
+## Play it online
+
+- **Runny Hound 2**, this version:
+  [lvsoftworks.com/demos/runny_hound_2](https://lvsoftworks.com/demos/runny_hound_2)
+- **Runny Hound 1**, the earlier version of the same game:
+  [play it](https://lvsoftworks.com/demos/runny_hound_1) ·
+  [source](https://github.com/msarro/Runny_Hound_1)
+
+The prompt that started this version is in [The Prompt](#the-prompt) below.
+
 ## Play it on your computer
 
 You need [Node.js](https://nodejs.org/) (the version in `.node-version`) and
@@ -73,7 +83,7 @@ Dependencies are tools used to build and check the game; none ship to players.
 
 ## The Prompt
 
-```
+```text
 I want you to create a simple web based game. The game should use entirely generated assets for graphics and sound. The game should feature a greyhound (based on the Moravian University mascot) running along the ground, jumping over obstacles when the user presses the space bar. The obstacles should be items related to the University or the city of Bethlehem PA. This will be in the style of the Google Dino-Run game, or flappy bird. The game should use assets and a color scheme derived from and meaningful to Moravian University, such as Moravian Stars, and Moravian university's branding.
 
 
@@ -113,9 +123,7 @@ Before we write any features, set up this project so that:
 12. When a piece of work is finished, wrap up: close or update the
     issues, update the README and docs, and prune stale notes from
     AGENTS.md.
-13. Create AGENTS.md from AGENTS_TEMPLATE.md in the guidelines
-    repository, so these rules apply to everyone whatever AI tool they
-    use. Also add a CLAUDE.md containing only the line @AGENTS.md.
+13. Create AGENTS.md to assist all users of this repo so that the same rules are followed. Also add a CLAUDE.md containing only the line @AGENTS.md.
 
 When setup is done, prove it works: show me the pipeline rejecting a
 failing test and a fake password, and show me a direct push to main
@@ -124,6 +132,21 @@ being refused.
 Never weaken or delete a test, or turn off a check, to make things pass.
 If you're stuck, stop and ask me.
 ```
+
+This is the prompt that started Runny Hound 2, in Claude Code on November 1, 2026. A few
+minutes earlier the same prompt was sent with a different item 13, asking for AGENTS.md to
+be created from a template in a separate guidelines repository. That repository wasn't
+available, so the request was withdrawn and re-sent as above; nothing else changed.
+
+Later requests in the same session built the game
+([#6](https://github.com/msarro/Runny_Hound_2/issues/6)), added the music
+([#8](https://github.com/msarro/Runny_Hound_2/issues/8)), a plain-language wiki error
+([#10](https://github.com/msarro/Runny_Hound_2/issues/10)), the project license
+([#12](https://github.com/msarro/Runny_Hound_2/issues/12)) and parity with Runny Hound 1
+([#14](https://github.com/msarro/Runny_Hound_2/issues/14),
+[#16](https://github.com/msarro/Runny_Hound_2/issues/16)). The prompt itself grew into
+[AI Repo Setup Prompt](https://github.com/msarro/AI_Repo_Setup_Prompt), a general version
+anyone can copy.
 
 ## License
 
