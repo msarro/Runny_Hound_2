@@ -71,6 +71,59 @@ Only permissive dependency licenses are allowed; the list is in
 
 Dependencies are tools used to build and check the game; none ship to players.
 
+## The Prompt
+```
+I want you to create a simple web based game. The game should use entirely generated assets for graphics and sound. The game should feature a greyhound (based on the Moravian University mascot) running along the ground, jumping over obstacles when the user presses the space bar. The obstacles should be items related to the University or the city of Bethlehem PA. This will be in the style of the Google Dino-Run game, or flappy bird. The game should use assets and a color scheme derived from and meaningful to Moravian University, such as Moravian Stars, and Moravian university's branding.
+
+
+Set up the repository for me. I'm not a professional developer, so explain each step in plain language.
+
+Before we write any features, set up this project so that:
+
+1. Every change starts as an issue in our repository, and you update that
+   issue as the work progresses.
+2. Work happens on a short-lived branch per issue and reaches main only
+   through a pull request that a person approves. Nobody pushes to main
+   directly. Set up branch protection to enforce this.
+3. Every change comes with automated tests. Write the test first and show
+   me it failing before you write the code.
+4. An automated pipeline runs on every pull request: formatting, linting,
+   tests, a scan for leaked passwords or keys, a scan for vulnerable
+   dependencies, and a license check. Run the same checks on my machine
+   before pushing.
+5. Every dependency is listed in a manifest with a lockfile, and a
+   software bill of materials (SBOM) is committed and kept current.
+6. Ask me how this software will be used (internal only, commercial,
+   shared outside the organization, open source) and record the answer.
+   The license check must reject any dependency whose license doesn't
+   allow that use. If commercial use is possible at all, assume it.
+7. Passwords and keys are never written into code.
+8. Code only runs from the folder it lives in, against the environment it
+   belongs to. Before any command that changes infrastructure or data
+   (terraform/tofu, kubectl, database tools), show me the folder,
+   workspace and account it will act on, and wait for my OK.
+9. If people sign in, use our institutional single sign-on (SSO). Define
+   the app's roles and what each can do in the app itself, then map
+   people to those roles through SSO groups or manual assignment.
+10. Keep two kinds of documentation, both required: help for end users
+    (in the app), and engineering docs for maintainers (architecture,
+    decisions, runbooks) in the repository, published to the wiki.
+    Start with a README and an architecture page with a diagram.
+12. When a piece of work is finished, wrap up: close or update the
+    issues, update the README and docs, and prune stale notes from
+    AGENTS.md.
+13. Create AGENTS.md from AGENTS_TEMPLATE.md in the guidelines
+    repository, so these rules apply to everyone whatever AI tool they
+    use. Also add a CLAUDE.md containing only the line @AGENTS.md.
+
+When setup is done, prove it works: show me the pipeline rejecting a
+failing test and a fake password, and show me a direct push to main
+being refused.
+
+Never weaken or delete a test, or turn off a check, to make things pass.
+If you're stuck, stop and ask me.
+```
+
 ## License
 
 Runny Hound © 2026 Matty Sarro is licensed under
