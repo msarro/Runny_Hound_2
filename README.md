@@ -72,6 +72,7 @@ Only permissive dependency licenses are allowed; the list is in
 Dependencies are tools used to build and check the game; none ship to players.
 
 ## The Prompt
+
 ```
 I want you to create a simple web based game. The game should use entirely generated assets for graphics and sound. The game should feature a greyhound (based on the Moravian University mascot) running along the ground, jumping over obstacles when the user presses the space bar. The obstacles should be items related to the University or the city of Bethlehem PA. This will be in the style of the Google Dino-Run game, or flappy bird. The game should use assets and a color scheme derived from and meaningful to Moravian University, such as Moravian Stars, and Moravian university's branding.
 
